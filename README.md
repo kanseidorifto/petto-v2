@@ -15,7 +15,7 @@ Frontend:
 Backend:
 
 - Tech stack:
-  - **.Net Core Web Api⚙️**
+  - **ASP.NET Core Web Api⚙️**
   - **EF Core🚀**
   - **JWT🔐**
   - **PostGRES📅**
