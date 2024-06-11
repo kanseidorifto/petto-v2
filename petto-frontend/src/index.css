@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	font-family: 'Comfortaa', cursive;
+}
+
+.text-pacifico {
+	font-family: 'Pacifico', cursive;
+}
+
+html {
+	min-height: 100vh;
+}
+body {
+	/* height: 100%; */
+	min-height: 100%;
+}
+.ReactModal__Overlay {
+	opacity: 0;
+	transform: translateY(-100px);
+	transition: all 250ms ease-in-out;
+	overflow-y: auto;
+	max-height: 100vh;
+	display: flex;
+	z-index: 60;
+}
+
+.ReactModal__Overlay--after-open {
+	opacity: 1;
+	transform: translateY(0px);
+}
+
+.ReactModal__Overlay--before-close {
+	opacity: 0;
+	transform: translateY(-100px);
+}
