@@ -1,24 +1,28 @@
-# Petto: Social network for Pet owners
+# Petto: Social network for Pet owners - V2
 
-My uni's course work
+My uni's final work
 
-Frontend [[petto-frontend repo](https://github.com/kanseidorifto/petto-frontend)]:
- - Tech stack:
-   - **ReactJS 🚀**
-   - **ViteJS ⚡️**
-   - **TailwindCSS 💅**
-   - **Redux Toolkit 🔄**
-   - **RTK Query 📡**
-   - **React Hook Form 📋**
+Frontend:
 
-Backend [[petto-backend repo](https://github.com/kanseidorifto/petto-backend)]:
- - Tech stack:
-	  - **NodeJS⚙️**
-	  - **ExpressJS🚀**
-	  - **JWT🔐**
+- Tech stack:
+  - **ReactJS 🚀**
+  - **ViteJS ⚡️**
+  - **TailwindCSS 💅**
+  - **Redux Toolkit 🔄**
+  - **RTK Query 📡**
+  - **React Hook Form 📋**
+
+Backend:
+
+- Tech stack:
+  - **.Net Core Web Api⚙️**
+  - **EF Core🚀**
+  - **JWT🔐**
+  - **PostGRES📅**
 
 Recognition API:
- - Tech stack:
-	-   **Python** 🐍
-	-   **FastAPI** 🚀
-	-   **TensorFlow Keras** 🧠
+
+- Tech stack:
+  - **Python** 🐍
+  - **FastAPI** 🚀
+  - **TensorFlow Keras** 🧠
