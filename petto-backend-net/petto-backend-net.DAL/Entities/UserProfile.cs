@@ -20,7 +20,7 @@ public class UserProfile: IdentityUser<Guid>
     public ICollection<PetProfile> Pets { get; set; }
     public ICollection<Community> OwnedCommunities { get; set; }
     public ICollection<CommunityMember> Communities { get; set; }
-    public ICollection<ChatParticipant> ChatParticipants { get; set; }
+    public ICollection<ChatParticipant> ChatsParticipations { get; set; }
     public ICollection<ChatMessage> ChatMessages { get; set; }
     public ICollection<Notification> Notifications { get; set; }
 }

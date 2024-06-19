@@ -150,6 +150,7 @@ public static class ServiceCollectionExtensions
             mc.AddProfile(new PetProfileProfile());
             mc.AddProfile(new UserPostProfile());
             mc.AddProfile(new CommunityProfile());
+            mc.AddProfile(new ChatProfile());
         });
 
         var mapper = mapperConfig.CreateMapper();
@@ -163,6 +164,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPetProfileRepository, PetProfileRepository>();
         services.AddScoped<IPostTaggedPetRepository, PostTaggedPetRepository>();
         services.AddScoped<IUserPostRepository, UserPostRepository>();
+        services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
     }
 
     public static void AddServices(this IServiceCollection services)
@@ -174,5 +176,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IUserFriendshipService, UserFriendshipService>();
         services.AddTransient<IPetProfileService, PetProfileService>();
         services.AddTransient<IUserPostService, UserPostService>();
+        services.AddTransient<IChatService, ChatService>();
     }
 }

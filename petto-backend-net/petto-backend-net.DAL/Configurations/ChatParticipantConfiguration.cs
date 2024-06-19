@@ -12,8 +12,18 @@ public class ChatParticipantConfiguration : IEntityTypeConfiguration<ChatPartici
             .HasKey(cp => new { cp.ChatRoomId, cp.ProfileId });
 
         builder
+            .HasOne(cp => cp.ChatRoom)
+            .WithMany(cr => cr.Participants)
+            .HasForeignKey(cp => cp.ChatRoomId);
+
+        builder
             .HasOne(cp => cp.Profile)
-            .WithMany(p => p.ChatParticipants)
+            .WithMany(p => p.ChatsParticipations)
             .HasForeignKey(cp => cp.ProfileId);
+
+        builder
+            .HasOne(cp => cp.LastReadedMessage)
+            .WithMany(cm => cm.LastReadedBy)
+            .HasForeignKey(cp => cp.LastReadedMessageId);
     }
 }
