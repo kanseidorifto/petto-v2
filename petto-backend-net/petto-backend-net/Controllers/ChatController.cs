@@ -93,6 +93,15 @@ public class ChatController : ControllerBase
         return Ok(chatRoom);
     }
 
+    [HttpPut("group/{chatRoomId}")]
+    public async Task<ActionResult<ChatRoomDetailsDTO>> UpdateGroupChatRoom(Guid chatRoomId, [FromForm] ChatRoomGroupUpdateDTO model)
+    {
+        var currentUserId = GetUserId.GetUserIdFromClaims(User);
+
+        var chatRoom = await _chatService.UpdateGroupChatRoom(currentUserId, chatRoomId, model);
+        return Ok(chatRoom);
+    }
+
     [HttpPost("private/{recipientId}/messages")]
     public async Task<ActionResult<ChatMessageReadDTO>> SendPrivateMessage(Guid recipientId, [FromForm] ChatMessageCreateDTO model)
     {
@@ -102,7 +111,7 @@ public class ChatController : ControllerBase
         return Ok(message);
     }
 
-    [HttpPost("group/{chatRoomId}/messages")]
+    [HttpPost("{chatRoomId}/messages")]
     public async Task<ActionResult<ChatMessageReadDTO>> SendGroupMessage(Guid chatRoomId, [FromForm] ChatMessageCreateDTO model)
     {
         var currentUserId = GetUserId.GetUserIdFromClaims(User);

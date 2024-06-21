@@ -10,6 +10,7 @@ public class ChatMessageReadDTO
     public UserProfileReadDTO SenderProfile { get; set; }
     public MessageType MessageType { get; set; }
     public string? MessageText { get; set; }
-    public string? MessageMediaUrls { get; set; }
+    public ICollection<string>? MessageMediaUrls { get; set; }
     public DateTime CreatedAt { get; set; }
+    public ICollection<ChatParticipantMessageDTO> LastReadedBy { get; set; }
 }

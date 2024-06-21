@@ -7,6 +7,7 @@ namespace petto_backend_net.BLL.Interfaces;
 public interface IChatService
 {
     Task<ChatRoomDetailsDTO> CreateGroupChatRoom(Guid userId, ChatRoomGroupCreateDTO model);
+    Task<ChatRoomDetailsDTO> UpdateGroupChatRoom(Guid userId, Guid chatRoomId, ChatRoomGroupUpdateDTO model);
     Task<EntitiesWithTotalCount<ChatRoomPreviewDTO>> GetChatRooms(Guid userId, ChatRoomFilteringModel model);
     Task<ChatRoomDetailsDTO> GetChatRoom(Guid userId, Guid chatRoomId);
     Task<EntitiesWithTotalCount<ChatMessageReadDTO>> GetChatRoomMessages(Guid userId, Guid chatRoomId, ChatMessageFilteringModel model);

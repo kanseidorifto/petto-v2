@@ -64,7 +64,7 @@ public class ChatService : IChatService
 
         await _chatRoomRepository.AddParticipant(chatRoom, user);
 
-        foreach (var participantId in model.Participants)
+        foreach (var participantId in model.Participants.Distinct())
         {
             var participant = await _userManager.FindByIdAsync(participantId.ToString());
             if (participant == null)
@@ -100,6 +100,127 @@ public class ChatService : IChatService
         return _mapper.Map<ChatRoomDetailsDTO>(chatRoom);
     }
 
+    public async Task<ChatRoomDetailsDTO> UpdateGroupChatRoom(Guid userId, Guid chatRoomId, ChatRoomGroupUpdateDTO model)
+    {
+        var chatRoom = await _chatRoomRepository.GetByIdWithInclude(id: chatRoomId,
+                                                                    include: q => q
+                                                                                  .Include(cr => cr.Profile)
+                                                                                  .Include(cr => cr.Participants)
+                                                                                  .ThenInclude(cp => cp.Profile)
+                                                                                  .Include(cr => cr.Messages));
+
+        if (chatRoom == null)
+        {
+            throw new NotFoundException("Chat room", chatRoomId);
+        }
+
+        if (chatRoom.ProfileId != userId)
+        {
+            throw new ForbiddenException("You can't update chat room that you didn't create");
+        }
+
+        if (chatRoom.Type != ChatType.Group)
+        {
+            throw new ForbiddenException("You can't update private chat room");
+        }
+
+        if (model.Title == null && model.IconMedia == null && model.Participants == null)
+        {
+            throw new BadRequestException("You should provide at least one field to update");
+        }
+
+        var edited = false;
+
+        if (model.Title != chatRoom.Title)
+        {
+            chatRoom.Title = model.Title;
+            chatRoom.EditedAt = DateTime.UtcNow;
+            edited = true;
+        }
+
+        if (model.IconMedia != null)
+        {
+            chatRoom.IconUrl = await _fileService.SaveFileAsync(model.IconMedia);
+            chatRoom.EditedAt = DateTime.UtcNow;
+            edited = true;
+        }
+
+        using var transaction = await _chatRoomRepository.GetContext().Database.BeginTransactionAsync();
+
+        if (edited)
+        {
+            var updatedMessage = new ChatMessage
+            {
+                ChatRoomId = chatRoom.Id,
+                SenderProfileId = userId,
+                MessageText = ChatInfoMessages.ChatRoomGroupUpdated(),
+                MessageType = MessageType.Info,
+                CreatedAt = DateTime.UtcNow,
+                EditedAt = DateTime.UtcNow
+            };
+
+            await _chatRoomRepository.AddMessage(updatedMessage);
+        }
+
+        await _chatRoomRepository.Update(chatRoom);
+
+        model.Participants.Add(userId);
+        // check removed and added participants
+        var removedParticipants = chatRoom.Participants.Where(p => !model.Participants.Contains(p.ProfileId)).ToList();
+        var addedParticipants = model.Participants.Where(p => !chatRoom.Participants.Any(cp => cp.ProfileId == p)).ToList();
+
+
+        foreach (var participant in removedParticipants)
+        {
+            await _chatRoomRepository.RemoveParticipant(chatRoom, participant.Profile);
+
+            var removedMessage = new ChatMessage
+            {
+                ChatRoomId = chatRoom.Id,
+                SenderProfileId = userId,
+                MessageText = ChatInfoMessages.ChatRoomParticipantRemoved($"{participant.Profile.GivenName} {participant.Profile.Surname}"),
+                MessageType = MessageType.Info,
+                CreatedAt = DateTime.UtcNow,
+                EditedAt = DateTime.UtcNow
+            };
+
+            await _chatRoomRepository.AddMessage(removedMessage);
+        }
+
+        foreach (var participantId in addedParticipants)
+        {
+            var participant = await _userManager.FindByIdAsync(participantId.ToString());
+            if (participant == null)
+            {
+                throw new NotFoundException("User", participantId);
+            }
+
+            await _chatRoomRepository.AddParticipant(chatRoom, participant);
+
+            var addedMessage = new ChatMessage
+            {
+                ChatRoomId = chatRoom.Id,
+                SenderProfileId = userId,
+                MessageText = ChatInfoMessages.ChatRoomParticipantAdded($"{participant.GivenName} {participant.Surname}"),
+                MessageType = MessageType.Info,
+                CreatedAt = DateTime.UtcNow,
+                EditedAt = DateTime.UtcNow
+            };
+
+            await _chatRoomRepository.AddMessage(addedMessage);
+        }
+
+        await transaction.CommitAsync();
+
+        chatRoom = await _chatRoomRepository.GetByIdWithInclude(id: chatRoomId,
+                                                                include: q => q
+                                                                              .Include(cr => cr.Profile)
+                                                                              .Include(cr => cr.Participants)
+                                                                              .ThenInclude(cp => cp.Profile)
+                                                                              .Include(cr => cr.Messages));
+
+        return _mapper.Map<ChatRoomDetailsDTO>(chatRoom);
+    }
     public async Task<ChatRoomDetailsDTO> GetChatRoom(Guid userId, Guid chatRoomId)
     {
         var chatRoom = await _chatRoomRepository.GetByIdWithInclude(
@@ -129,9 +250,12 @@ public class ChatService : IChatService
                                       .Include(cr => cr.Profile)
                                       .Include(cr => cr.Participants)
                                       .Include(cr => cr.Messages)
-                                      .Where(cr => cr.Participants.Any(p => p.ProfileId == userId));
+                                      .Where(cr => cr.Participants.Any(p => p.ProfileId == userId))
+                                      .Filter(model)
+                                      .OrderByDescending(cr => cr.Messages.OrderByDescending(cm => cm.CreatedAt).First().CreatedAt)
+                                      .AsQueryable();
 
-        var totalCount = query.Count();
+        var totalCount = await query.CountAsync();
 
         query = query.SortByField(model).Paginate(model);
 
@@ -164,6 +288,8 @@ public class ChatService : IChatService
         var query = _chatRoomRepository.GetMessagesQuery(chatRoomId)
                                       .Include(cm => cm.SenderProfile)
                                       .Include(cm => cm.ChatRoom)
+                                      .Filter(model)
+                                      .OrderByDescending(cm => cm.CreatedAt)
                                       .AsQueryable();
 
         var totalCount = query.Count();

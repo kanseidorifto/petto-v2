@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 
+using Newtonsoft.Json;
+
 using petto_backend_net.DAL.Entities;
 using petto_backend_net.BLL.DTO.Chat;
 
@@ -18,6 +20,9 @@ public class ChatProfile : Profile
                         opt.MapFrom(src => src.Messages.OrderByDescending(m => m.CreatedAt).FirstOrDefault()));
 
         CreateMap<ChatParticipant, ChatParticipantPreviewDTO>();
-        CreateMap<ChatMessage, ChatMessageReadDTO>();
+        CreateMap<ChatParticipant, ChatParticipantMessageDTO>();
+        CreateMap<ChatMessage, ChatMessageReadDTO>()
+            .ForMember(dest => dest.MessageMediaUrls, opt =>
+                        opt.MapFrom(src => JsonConvert.DeserializeObject<List<string>>(src.MessageMediaUrls ?? "[]")));
     }
 }
