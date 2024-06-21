@@ -9,11 +9,11 @@ export const useDebounce = (callback) => {
 	}, [callback]);
 
 	const debouncedCallback = useMemo(() => {
-		const func = () => {
-			ref.current?.();
+		const func = (...args) => {
+			ref.current?.(...args);
 		};
 
-		return debounce(func, 1000);
+		return debounce(func, 700);
 	}, []);
 
 	return debouncedCallback;

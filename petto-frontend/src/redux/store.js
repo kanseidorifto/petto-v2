@@ -1,19 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './auth/authSlice';
 import modalReducer from './modal/modalSlice';
-import { authApi } from '../services/authService';
-import { postApi } from '../services/postService';
-import { petApi } from '../services/petService';
+import { baseApi } from '../services/baseService';
 
 const store = configureStore({
 	reducer: {
 		auth: authReducer,
 		modal: modalReducer,
-		[authApi.reducerPath]: authApi.reducer,
-		[postApi.reducerPath]: postApi.reducer,
-		[petApi.reducerPath]: petApi.reducer,
+		[baseApi.reducerPath]: baseApi.reducer,
 	},
-	middleware: (getDefaultMiddleware) =>
-		getDefaultMiddleware().concat([authApi.middleware, postApi.middleware, petApi.middleware]),
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([baseApi.middleware]),
 });
 export default store;

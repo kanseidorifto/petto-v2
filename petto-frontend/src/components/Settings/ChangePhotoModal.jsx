@@ -4,18 +4,10 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useState, useRef } from 'react';
 import { Cropper } from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
+import { file2Base64 } from '../../utils/file2Base64';
 
 Modal.setAppElement('#root');
 
-// this transforms file to base64
-const file2Base64 = (file) => {
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = () => resolve(reader.result?.toString() || '');
-		reader.onerror = (error) => reject(error);
-	});
-};
 const ChangePhotoModal = ({ modalIsOpen, afterOpenModal, closeModal, label, aspectRatio }) => {
 	// ref of the file input
 	const fileRef = useRef();

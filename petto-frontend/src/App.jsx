@@ -15,8 +15,13 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import MainNavMobileModal from './components/MainNavMobileModal';
+import Chats from './pages/Chats';
+import Conversation from './pages/Conversation';
+import { dayjsSetup } from './utils/dayJsSetup';
+import ConversationLayout from './layouts/ConversationLayout';
 
 function App() {
+	dayjsSetup();
 	return (
 		<>
 			<ToastContainer position="top-right" />
@@ -31,6 +36,10 @@ function App() {
 						<Route path="/pets/*" element={<Pets />} />
 						<Route path="/pets/:petId" element={<PetProfile />} />
 						<Route path="/search" element={<Search />} />
+						<Route path="/chats" element={<Chats />} />
+					</Route>
+					<Route element={<ConversationLayout />}>
+						<Route path="/chats/:chatId" element={<Conversation />} />
 					</Route>
 					<Route element={<FriendListLayout />}>
 						<Route path="/friends/*" element={<Friends />} />

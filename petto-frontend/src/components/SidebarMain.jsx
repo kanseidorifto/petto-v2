@@ -3,6 +3,7 @@ import {
 	RectangleStackIcon,
 	MagnifyingGlassIcon,
 	UserGroupIcon,
+	ChatBubbleLeftIcon,
 	Cog8ToothIcon,
 	SparklesIcon,
 } from '@heroicons/react/24/outline';
@@ -23,6 +24,11 @@ const options = [
 		icon: <MagnifyingGlassIcon className="w-6 h-6" />,
 		label: 'Пошук',
 		href: '/search',
+	},
+	{
+		icon: <ChatBubbleLeftIcon className="w-6 h-6" />,
+		label: 'Повідомлення',
+		href: '/chats',
 	},
 	{
 		icon: <UserGroupIcon className="w-6 h-6" />,

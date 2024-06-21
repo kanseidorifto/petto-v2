@@ -1,14 +1,22 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useSendFriendRequestMutation } from '../../services/authService';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
+import SendPrivateMessageModal from './SendPrivateMessageModal';
+import useModal from '../../hooks/useModal';
 
 const ProfileHeader = ({ id, givenName, surname, bio, avatarUrl, coverUrl, own }) => {
 	const navigate = useNavigate();
+	const { userInfo } = useSelector((state) => state.auth);
 	const [sendFriendRequest] = useSendFriendRequestMutation();
+
+	const { open } = useModal('sendPrivateMessageModal');
 
 	const onClickEditProfile = () => {
 		navigate('/settings/profile');
 	};
+
+	const isFriend = userInfo?.friends?.some((friend) => friend.id === id);
 
 	const onClickSendFriendRequest = () => {
 		toast.promise(sendFriendRequest(id).unwrap(), {
@@ -17,6 +25,11 @@ const ProfileHeader = ({ id, givenName, surname, bio, avatarUrl, coverUrl, own }
 			error: 'Помилка надсилання запиту у друзі. Можливо такий запит уже існує. 🤯',
 		});
 	};
+
+	const onClickSendMessage = () => {
+		open({ id });
+	};
+
 	return (
 		<div>
 			<div className="w-full rounded-md bg-violet-400">
@@ -45,10 +58,16 @@ const ProfileHeader = ({ id, givenName, surname, bio, avatarUrl, coverUrl, own }
 										Редагувати профіль
 									</button>
 								</Link>
+							) : isFriend ? (
+								<button
+									onClick={onClickSendMessage}
+									className="text-sm leading-none border-violet-400 hover:bg-violet-600 bg-violet-400  min-w-[192px] p-3 rounded-xl transition-colors">
+									Написати повідомлення
+								</button>
 							) : (
 								<button
 									onClick={onClickSendFriendRequest}
-									className="text-sm leading-none border-amber-400 hover:bg-amber-500 bg-amber-400  min-w-[192px] p-3 rounded-xl">
+									className="text-sm leading-none border-amber-400 hover:bg-amber-500 bg-amber-400  min-w-[192px] p-3 rounded-xl transition-colors">
 									Додати друга
 								</button>
 							)}
@@ -56,6 +75,7 @@ const ProfileHeader = ({ id, givenName, surname, bio, avatarUrl, coverUrl, own }
 					</div>
 				</div>
 			</div>
+			<SendPrivateMessageModal modalKey="sendPrivateMessageModal" />
 		</div>
 	);
 };

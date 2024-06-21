@@ -9,18 +9,9 @@ import { dataUrlToFile } from '../../utils/dataUrlToFile';
 import { useCreatePetMutation } from '../../services/petService';
 import { toast } from 'react-toastify';
 import { recognizePet } from '../../utils/recognizePet';
+import { file2Base64 } from '../../utils/file2Base64';
 
 Modal.setAppElement('#root');
-
-// this transforms file to base64
-const file2Base64 = (file) => {
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = () => resolve(reader.result?.toString() || '');
-		reader.onerror = (error) => reject(error);
-	});
-};
 
 const CreatePetModal = ({ modalIsOpen, closeModal }) => {
 	const {

@@ -10,18 +10,9 @@ import { useUpdatePetMutation } from '../../services/petService';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { recognizePet } from '../../utils/recognizePet';
+import { file2Base64 } from '../../utils/file2Base64';
 
 Modal.setAppElement('#root');
-
-// this transforms file to base64
-const file2Base64 = (file) => {
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = () => resolve(reader.result?.toString() || '');
-		reader.onerror = (error) => reject(error);
-	});
-};
 
 const UpdatePetModal = ({ modalIsOpen, closeModal }) => {
 	const pet = modalIsOpen.pet;
@@ -122,13 +113,6 @@ const UpdatePetModal = ({ modalIsOpen, closeModal }) => {
 					</button>
 				</div>
 				<div className="flex flex-col items-center space-y-2 text-center">
-					<input
-						type="file"
-						style={{ display: 'none' }}
-						ref={fileRef}
-						onChange={onFileInputChange}
-						accept="image/png,image/jpeg,image/gif"
-					/>
 					<input
 						type="file"
 						style={{ display: 'none' }}
