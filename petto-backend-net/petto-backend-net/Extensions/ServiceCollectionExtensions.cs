@@ -25,6 +25,7 @@ public static class ServiceCollectionExtensions
                 options.UseNpgsql(configuration["POSTGRESDB_URI"]),
             contextLifetime: ServiceLifetime.Transient,
             optionsLifetime: ServiceLifetime.Scoped);
+        Console.WriteLine($"Database connected, {configuration["POSTGRESDB_URI"]}");
     }
 
     public static void AddIdentity(this IServiceCollection services)
