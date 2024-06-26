@@ -72,19 +72,19 @@ export const chatApi = baseApi.injectEndpoints({
 				{ type: 'Chats', id: chatId },
 				{ type: 'Chats', id: 'LIST' },
 			],
-			async onQueryStarted({ chatId, message }, { dispatch, queryFulfilled }) {
-				try {
-					const { data: createdMessage } = await queryFulfilled;
-					const patchResult = dispatch(
-						baseApi.util.updateQueryData('getChatMessageList', { chatId }, (messageList) => ({
-							items: [createdMessage, ...messageList.items],
-							totalCount: messageList.totalCount + 1,
-						})),
-					);
-				} catch {
-					// Handle error
-				}
-			},
+			// async onQueryStarted({ chatId, message }, { dispatch, queryFulfilled }) {
+			// 	try {
+			// 		const { data: createdMessage } = await queryFulfilled;
+			// 		const patchResult = dispatch(
+			// 			baseApi.util.updateQueryData('getChatMessageList', { chatId }, (messageList) => ({
+			// 				items: [createdMessage, ...messageList.items],
+			// 				totalCount: messageList.totalCount + 1,
+			// 			})),
+			// 		);
+			// 	} catch {
+			// 		// Handle error
+			// 	}
+			// },
 		}),
 		sendPrivateMessage: builder.mutation({
 			query: ({ userId, message }) => ({

@@ -34,7 +34,7 @@ public static class ServiceCollectionExtensions
         .AddDefaultTokenProviders();
     }
 
-        public static async void CreateRoles(this WebApplication application)
+    public static async void CreateRoles(this WebApplication application)
     {
         var serviceProvider = application.Services.CreateScope().ServiceProvider;
         var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
@@ -89,7 +89,25 @@ public static class ServiceCollectionExtensions
                 {
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["JWT:SECRET"])),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                };
+
+                x.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        // If the request is for our hub...
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                                                       (path.StartsWithSegments("/ws")))
+                        {
+                            // Read the token out of the query string
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
 
@@ -136,7 +154,9 @@ public static class ServiceCollectionExtensions
                               {
                                   policy.WithOrigins(configuration["CORS:ORIGINS"].Split(','))
                                         .AllowAnyHeader()
-                                        .AllowAnyMethod();
+                                        .AllowAnyMethod()
+                                        .SetIsOriginAllowed(origin => true)
+                                        .AllowCredentials();
                               });
         });
     }

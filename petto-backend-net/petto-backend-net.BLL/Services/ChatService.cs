@@ -270,6 +270,17 @@ public class ChatService : IChatService
         return result;
     }
 
+    public async Task<ICollection<Guid>> GetChatRoomsIds(Guid userId)
+    {
+        var chatRooms = await _chatRoomRepository.GetQuery()
+                                                .Include(cr => cr.Participants)
+                                                .Where(cr => cr.Participants.Any(p => p.ProfileId == userId))
+                                                .Select(cr => cr.Id)
+                                                .ToListAsync();
+
+        return chatRooms;
+    }
+
     public async Task<EntitiesWithTotalCount<ChatMessageReadDTO>> GetChatRoomMessages(Guid userId, Guid chatRoomId, ChatMessageFilteringModel model)
     {
         var chatRoom = await _chatRoomRepository.GetByIdWithInclude(id: chatRoomId,

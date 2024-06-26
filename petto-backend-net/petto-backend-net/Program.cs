@@ -1,6 +1,7 @@
 using DotNetEnv;
 using DotNetEnv.Configuration;
 using petto_backend_net.Extensions;
+using petto_backend_net.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ builder.Services.AddAutoMapper();
 
 builder.Services.AddIdentity();
 builder.Services.AddJwtAuthentication(builder.Configuration);
+
+builder.Services.AddSignalR();
 
 builder.Services.AddRepositories();
 builder.Services.AddServices();
@@ -49,5 +52,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/ws/chathub");
 
 app.Run();

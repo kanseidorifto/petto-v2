@@ -6,7 +6,7 @@ import {
 	XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 import Popup from 'reactjs-popup';
@@ -23,9 +23,15 @@ import { file2Base64 } from '../utils/file2Base64';
 import EditChatModal from '../components/Chat/EditChatModal';
 import useModal from '../hooks/useModal';
 
+import * as signalR from '@microsoft/signalr';
+import { baseApi } from '../services/baseService';
+
+const WS_URL = import.meta.env.VITE_APP_WS_URL;
+
 const Conversation = () => {
 	const { chatId } = useParams();
-	const { userInfo } = useSelector((state) => state.auth);
+	const { userInfo, userToken } = useSelector((state) => state.auth);
+	const dispatch = useDispatch();
 
 	const chatInfo = useGetChatQuery(chatId);
 
@@ -92,6 +98,45 @@ const Conversation = () => {
 	const containerRef = useRef(null);
 
 	//
+	useEffect(() => {
+		const сonnection = new signalR.HubConnectionBuilder()
+			.withUrl(WS_URL + '/chathub', { accessTokenFactory: () => userToken })
+			.build();
+
+		сonnection
+			.start()
+			.then(() => {
+				сonnection.on('ReceivedChatMessage', async (message) => {
+					console.log(message);
+					const chatRoomId = message.chatRoomId;
+					if (chatRoomId !== chatId) return;
+					dispatch(
+						baseApi.util.updateQueryData(
+							'getChatMessageList',
+							{ chatId: chatRoomId },
+							(messageList) => {
+								return {
+									items: [message, ...messageList.items],
+									totalCount: messageList.totalCount + 1,
+								};
+							},
+						),
+					);
+					await new Promise((resolve) => setTimeout(resolve, 200));
+					containerRef.current.scroll({
+						top: containerRef.current.scrollHeight,
+						behavior: 'smooth',
+					});
+				});
+			})
+			.catch((err) => console.log(err));
+
+		return () => {
+			сonnection.stop();
+		};
+	}, [chatId, dispatch, userToken]);
+
+	//
 	const fileInputRef = useRef(null);
 	const [files, setFiles] = useState([]);
 	const [fileIcons, setFileIcons] = useState([]);
@@ -144,20 +189,20 @@ const Conversation = () => {
 
 	return (
 		<div className="flex h-full gap-4">
-			<div className="flex h-full flex-col flex-1">
-				<div className="flex gap-2 items-center px-6 py-3 text-white bg-violet-500 rounded-t-md">
+			<div className="flex flex-col flex-1 h-full">
+				<div className="flex items-center gap-2 px-6 py-3 text-white bg-violet-500 rounded-t-md">
 					<Link to="/chats" className="flex items-center space-x-2">
 						<ArrowLeftIcon className="w-6 h-6" />
 					</Link>
-					<div className="flex gap-2 flex-1">
+					<div className="flex flex-1 gap-2">
 						{iconUrl ? (
 							<img
 								src={iconUrl}
 								alt="chat icon"
-								className="rounded-full aspect-square w-12 object-cover"
+								className="object-cover w-12 rounded-full aspect-square"
 							/>
 						) : (
-							<div className="rounded-full aspect-square w-12 bg-violet-600 flex items-center justify-center">
+							<div className="flex items-center justify-center w-12 rounded-full aspect-square bg-violet-600">
 								<p className="text-xl font-bold">?</p>
 							</div>
 						)}
@@ -203,7 +248,7 @@ const Conversation = () => {
 				</div>
 				<div
 					ref={containerRef}
-					className="px-6 flex-1 flex flex-col bg-violet-400 overflow-y-scroll scrollbar-thin">
+					className="flex flex-col flex-1 px-6 overflow-y-scroll bg-violet-400 scrollbar-thin">
 					<div className="flex-grow" />
 					<MessageList chatId={chatId} chatInfo={chatInfo.data} containerRef={containerRef} />
 				</div>
@@ -212,7 +257,7 @@ const Conversation = () => {
 						{fileIcons.map((file, index) => (
 							<div
 								key={index}
-								className="flex gap-2 items-center p-2 text-white bg-violet-400 rounded-md">
+								className="flex items-center gap-2 p-2 text-white rounded-md bg-violet-400">
 								<button
 									onClick={() => {
 										if (window.confirm('Видалити файл?')) {
@@ -223,12 +268,16 @@ const Conversation = () => {
 									className="transition-colors rounded-md shadow text-violet-100 hover:bg-violet-300/50">
 									<XMarkIcon className="w-6 h-6" />
 								</button>
-								<img src={file.icon} alt="" className="w-64 max-h-64" />
+								<img
+									src={file.icon}
+									alt=""
+									className="max-w-lg max-h-32 lg:max-w-3xl lg:max-h-32"
+								/>
 							</div>
 						))}
 					</div>
 				)}
-				<div className="flex gap-2 items-center px-6 py-2 text-white bg-violet-500 rounded-b-md">
+				<div className="flex items-center gap-2 px-6 py-2 text-white bg-violet-500 rounded-b-md">
 					<input
 						ref={fileInputRef}
 						onChange={handleFileUpload}
@@ -263,7 +312,7 @@ const Conversation = () => {
 			</div>
 			{chatInfo.data.type !== 0 && (
 				<div className="max-lg:hidden">
-					<aside className="rounded-md w-64 xl:w-72 bg-violet-400">
+					<aside className="w-64 rounded-md xl:w-72 bg-violet-400">
 						<div className="flex items-center justify-between px-6 py-4 text-white bg-violet-500 rounded-t-md">
 							<h2 className="text-base font-medium">Інформація про чат</h2>
 						</div>
@@ -273,16 +322,16 @@ const Conversation = () => {
 									<img
 										src={chatInfo.data.iconUrl}
 										alt="chat icon"
-										className="rounded-full aspect-square w-40 object-cover"
+										className="object-cover w-40 rounded-full aspect-square"
 									/>
 								) : (
-									<div className="rounded-full aspect-square w-40 bg-violet-500 flex items-center justify-center">
+									<div className="flex items-center justify-center w-40 rounded-full aspect-square bg-violet-500">
 										<p className="text-4xl font-bold">?</p>
 									</div>
 								)}
 								<p className="text-lg font-bold">{chatInfo.data.title}</p>
 								<p className="text-sm font-medium">Учасники</p>
-								<div className="flex flex-wrap gap-2 justify-center">
+								<div className="flex flex-wrap justify-center gap-2">
 									{chatInfo.data.participants.map((participant) => (
 										<Link
 											key={participant.profile.id}
@@ -298,7 +347,7 @@ const Conversation = () => {
 									))}
 								</div>
 							</div>
-							<div className="text-center space-y-1">
+							<div className="space-y-1 text-center">
 								{chatInfo.data.profile.id === userInfo.id ? (
 									<button
 										onClick={() => open(chatInfo.data)}

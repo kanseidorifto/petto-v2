@@ -40,11 +40,11 @@ const PetProfile = () => {
 					</div>
 				</main>
 				<div>
-					<aside className="text-white rounded-md md:w-96 bg-violet-400">
+					<aside className="text-white rounded-md lg:w-96 bg-violet-400">
 						{/* <div className="flex items-center justify-between px-6 py-4 text-white bg-violet-500 rounded-t-md">
 							<h2 className="text-base font-medium">Улюбленець</h2>
 						</div> */}
-						<div className="select-none md:w-96 md:h-96">
+						<div className="select-none lg:w-96 lg:h-96">
 							<img
 								src={petProfileInfo.data.avatarUrl}
 								alt="Pet Avatar"

@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 using petto_backend_net.BLL.DTO;
 using petto_backend_net.BLL.DTO.Chat;
 using petto_backend_net.BLL.Filtering;
 using petto_backend_net.BLL.Interfaces;
 using petto_backend_net.Helpers;
+using petto_backend_net.Hubs;
 
 namespace petto_backend_net.Controllers;
 
@@ -15,10 +17,14 @@ namespace petto_backend_net.Controllers;
 public class ChatController : ControllerBase
 {
     private readonly IChatService _chatService;
+    private readonly IHubContext<ChatHub, IChatHub> _chatHubContext;
 
-    public ChatController(IChatService chatService)
+    public ChatController(
+        IChatService chatService,
+        IHubContext<ChatHub, IChatHub> chatHubContext)
     {
         _chatService = chatService;
+        _chatHubContext = chatHubContext;
     }
 
     [HttpGet]
@@ -108,6 +114,9 @@ public class ChatController : ControllerBase
         var currentUserId = GetUserId.GetUserIdFromClaims(User);
 
         var message = await _chatService.SendPrivateMessage(currentUserId, recipientId, model);
+
+        _ = _chatHubContext.Clients.User(recipientId.ToString()).ReceivedChatMessage(message);
+
         return Ok(message);
     }
 
@@ -117,6 +126,9 @@ public class ChatController : ControllerBase
         var currentUserId = GetUserId.GetUserIdFromClaims(User);
 
         var message = await _chatService.SendRoomMessage(currentUserId, chatRoomId, model);
+
+        _ = _chatHubContext.Clients.Group(chatRoomId.ToString()).ReceivedChatMessage(message);
+
         return Ok(message);
     }
 
