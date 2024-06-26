@@ -9,6 +9,7 @@ public class AppDbContext : IdentityDbContext<UserProfile, IdentityRole<Guid>, G
 {
     public AppDbContext(DbContextOptions options) : base(options)
     {
+        RelationalDatabaseFacadeExtensions.Migrate(Database);
     }
 
     public DbSet<UserProfile> UserProfiles { get; set; }
