@@ -159,14 +159,14 @@ public class UserPostService : IUserPostService
 
     public async Task<EntitiesWithTotalCount<UserPostReadDto>> GetFeed(Guid userId, UserPostFeedFilteringModel model)
     {
+        // user's own posts, posts of user's friends, and posts of user's requested friends
         var query = _userPostRepository
             .GetQuery()
             .Include(up => up.Profile)
+            .ThenInclude(p => p.FriendRequests)
             .OrderByDescending(up => up.CreatedAt)
-            .Where(up => up.Profile.Friends.Any(f => f.Id == userId) || up.ProfileId == userId)
-            .Where(up => up.Profile.FriendRequests.Any(frp => 
-                                frp.ProfileRequestId == userId || frp.Status == true) || 
-                                up.ProfileId == userId);
+            .Where(up => up.ProfileId == userId ||
+                 up.Profile.FriendRequests.Any(fr => fr.ProfileAcceptId == userId && fr.Status == true));
 
         var totalCount = query.Count();
 
