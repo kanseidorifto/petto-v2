@@ -20,11 +20,13 @@ public static class ServiceCollectionExtensions
 {
     public static void AddDbContext(this IServiceCollection services, IConfiguration configuration)
     {
+        Console.WriteLine($"Configuring {configuration["POSTGRESDB_URI"]}");
         services.AddDbContext<AppDbContext>(
             optionsAction: (serviceProvider, options) =>
                 options.UseNpgsql(configuration["POSTGRESDB_URI"]),
             contextLifetime: ServiceLifetime.Transient,
             optionsLifetime: ServiceLifetime.Scoped);
+        Console.WriteLine($"Database connected!");
     }
 
     public static void AddIdentity(this IServiceCollection services)
