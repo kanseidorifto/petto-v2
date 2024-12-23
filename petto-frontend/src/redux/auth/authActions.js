@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
+import { t } from 'i18next';
 
 const backendURL = process.env.VITE_APP_API_URL; //'/api';
 
@@ -17,9 +18,9 @@ export const registerUser = createAsyncThunk(
 			const { data } = await toast.promise(
 				axios.post(`${backendURL}/auth/register`, { givenName, surname, email, password }, config),
 				{
-					pending: 'Реєстрація...',
-					success: 'Успішно зареєстровано 👌',
-					error: 'Помилка реєстрації 🤯',
+					pending: t('notifications.register.pending'),
+					success: t('notifications.register.success'),
+					error: t('notifications.register.error'),
 				},
 			);
 			return data;
@@ -48,9 +49,9 @@ export const userLogin = createAsyncThunk(
 			const { data } = await toast.promise(
 				axios.post(`${backendURL}/auth/login`, { email, password }, config),
 				{
-					pending: 'Вхід...',
-					success: 'Успішний вхід 👌',
-					error: 'Помилка входу 🤯',
+					pending: t('notifications.login.pending'),
+					success: t('notifications.login.success'),
+					error: t('notifications.login.error'),
 				},
 			);
 			localStorage.setItem('userToken', data.token);
