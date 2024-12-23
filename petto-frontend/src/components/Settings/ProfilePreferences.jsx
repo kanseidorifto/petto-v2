@@ -1,24 +1,19 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import ChangePhotoModal from './ChangePhotoModal';
-import { useState } from 'react';
 import { useGetOwnerDetailsQuery, useUpdateOwnerDetailsMutation } from '../../services/authService';
 import { dataUrlToFile } from '../../utils/dataUrlToFile';
-import { toast } from 'react-toastify';
 
 const ProfilePreferences = () => {
+	const { t, i18n } = useTranslation();
 	const profile = useGetOwnerDetailsQuery();
 	const [updateProfile] = useUpdateOwnerDetailsMutation();
-	const {
-		register,
-		handleSubmit,
-		reset,
-		// setError,
-		// eslint-disable-next-line
-		formState: { errors, isValid },
-	} = useForm({
+	const { register, handleSubmit } = useForm({
 		mode: 'onSubmit',
-		// shouldUseNativeValidation: true,
 	});
 	const [newAvatar, setNewAvatar] = useState(null);
 	const [newCover, setNewCover] = useState(null);
@@ -27,7 +22,9 @@ const ProfilePreferences = () => {
 	if (profile.isFetching) {
 		return (
 			<main className="px-6 py-4 text-white rounded-md bg-violet-400">
-				<p className="px-6 py-10 text-lg font-medium text-center">Завантаження... 🏃‍♂️</p>
+				<p className="px-6 py-10 text-lg font-medium text-center">
+					{t('preferences.profiile.loading')}
+				</p>
 			</main>
 		);
 	}
@@ -39,10 +36,18 @@ const ProfilePreferences = () => {
 		setShowModal((prev) => ({ ...prev, show: false }));
 	};
 	const handleAvatarChange = () => {
-		openModal({ label: 'Змінити основне фото', aspectRatio: 1, setResult: setNewAvatar });
+		openModal({
+			label: t('preferences.profiile.change_avatar'),
+			aspectRatio: 1,
+			setResult: setNewAvatar,
+		});
 	};
 	const handleCoverChange = () => {
-		openModal({ label: 'Змінити обкладинку', aspectRatio: 3, setResult: setNewCover });
+		openModal({
+			label: t('preferences.profiile.change_cover'),
+			aspectRatio: 3,
+			setResult: setNewCover,
+		});
 	};
 	const onSubmit = async (values) => {
 		const formData = new FormData();
@@ -60,10 +65,14 @@ const ProfilePreferences = () => {
 				await dataUrlToFile(newCover, `cover-${profile.data.id}.png`, 'image/png'),
 			);
 		toast.promise(updateProfile(formData).unwrap(), {
-			pending: 'Оновлення...',
-			success: 'Профіль успішно оновлений 👌',
-			error: 'Помилка оновлення профілю 🤯',
+			pending: t('notifications.updateProfile.pending'),
+			success: t('notifications.updateProfile.success'),
+			error: t('notifications.updateProfile.error'),
 		});
+	};
+
+	const handleLngChange = (e) => {
+		i18n.changeLanguage(e.target.value);
 	};
 
 	return (
@@ -71,13 +80,13 @@ const ProfilePreferences = () => {
 			<form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
 				<div className="grid grid-cols-3 gap-6 p-1">
 					<div className="self-center text-right">
-						<p>Фото</p>
+						<p>{t('preferences.profiile.avatar')}</p>
 					</div>
 					<div className="relative w-32 h-32 col-span-2">
 						{profile.data.avatarUrl !== '' || newAvatar ? (
 							<img
 								src={newAvatar ? newAvatar : profile.data.avatarUrl}
-								alt="Avatar"
+								alt="avatar"
 								className="w-32 h-32 rounded-full max-w-none bg-violet-700"
 							/>
 						) : (
@@ -94,13 +103,13 @@ const ProfilePreferences = () => {
 				</div>
 				<div className="grid grid-cols-3 gap-6 p-1 sm:p-3">
 					<div className="self-center text-right">
-						<p>Обкладинка профілю</p>
+						<p>{t('preferences.profiile.cover')}</p>
 					</div>
 					<div className="relative w-full col-span-2 md:w-64">
 						{profile.data.coverUrl !== '' || newCover ? (
 							<img
 								src={newCover ? newCover : profile.data.coverUrl}
-								alt="Header"
+								alt="header"
 								className="object-contain w-full rounded-md bg-violet-700"
 							/>
 						) : (
@@ -111,39 +120,41 @@ const ProfilePreferences = () => {
 							onClick={handleCoverChange}
 							type="button"
 							className="absolute inset-0 transition-colors rounded-md hover:bg-violet-300/50">
-							<span className="text-white">Змінити</span>
+							<span className="text-white">{t('preferences.profiile.edit')}</span>
 						</button>
 					</div>
 				</div>
 				<div className="grid grid-cols-3 gap-6 p-1 sm:p-3">
 					<div className="self-center text-right">
-						<p>Ім&apos;я</p>
+						<p>{t('preferences.profiile.givenName')}</p>
 					</div>
 					<div className="col-span-2">
 						<input
 							type="text"
 							defaultValue={profile.data.givenName}
-							{...register('givenName', { required: "Введіть своє ім'я" })}
+							{...register('givenName', {
+								required: t('preferences.profiile.givenName_placeholder'),
+							})}
 							className="max-w-full px-2 py-2 bg-transparent border rounded-md border-violet-700 focus:outline-none focus:ring-violet-800 focus:border-violet-800"
 						/>
 					</div>
 				</div>
 				<div className="grid grid-cols-3 gap-6 p-1 sm:p-3">
 					<div className="self-center text-right">
-						<p>Прізвище</p>
+						<p>{t('preferences.profiile.surname')}</p>
 					</div>
 					<div className="col-span-2">
 						<input
 							type="text"
 							defaultValue={profile.data.surname}
-							{...register('surname', { required: 'Введіть своє прізвище' })}
+							{...register('surname', { required: t('preferences.profiile.surname_placeholder') })}
 							className="max-w-full px-2 py-2 bg-transparent border rounded-md border-violet-700 focus:outline-none focus:ring-violet-800 focus:border-violet-800"
 						/>
 					</div>
 				</div>
 				<div className="grid grid-cols-3 gap-6 p-1 sm:p-3">
 					<div className="self-center text-right">
-						<p>Біографія</p>
+						<p>{t('preferences.profiile.bio')}</p>
 					</div>
 					<div className="col-span-2">
 						<input
@@ -154,9 +165,30 @@ const ProfilePreferences = () => {
 						/>
 					</div>
 				</div>
+				<div className="grid grid-cols-3 gap-6 p-1 sm:p-3">
+					<div className="self-center text-right">
+						<p>{t('preferences.profiile.language')}</p>
+					</div>
+					<div className="col-span-2">
+						<select
+							name="select"
+							id="language-select"
+							value={i18n.language}
+							onChange={handleLngChange}
+							className="p-2 bg-transparent border rounded-md border-violet-700 focus:outline-none focus:ring-violet-800 focus:border-violet-800">
+							<option value="uk" className="text-black">
+								{t('languages.list.uk')}
+							</option>
+							<option value="en" className="text-black">
+								{t('languages.list.en')}
+							</option>
+						</select>
+					</div>
+				</div>
+
 				<div className="p-3 text-center">
 					<button className="p-3 min-w-[200px] leading-none bg-violet-700 hover:bg-violet-500 transition-colors rounded-xl">
-						Зберегти зміни
+						{t('preferences.save_changes')}
 					</button>
 				</div>
 			</form>

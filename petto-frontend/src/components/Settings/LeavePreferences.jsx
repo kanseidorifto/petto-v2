@@ -1,13 +1,16 @@
 import { useDispatch } from 'react-redux';
-import { logout } from '../../redux/auth/authSlice';
-import { baseApi } from '../../services/baseService';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import { logout } from '../../redux/auth/authSlice';
+import { baseApi } from '../../services/baseService';
+
 const LeavePreferences = () => {
+	const { t } = useTranslation();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const handleLogout = () => {
-		if (confirm('Вийти з облікового запису?')) {
+		if (confirm(t('preferences.confirmLeave'))) {
 			dispatch(baseApi.util.resetApiState());
 			dispatch(logout());
 			navigate('/sign-in');
@@ -19,13 +22,13 @@ const LeavePreferences = () => {
 			<div className="flex flex-col">
 				<div className="grid items-center justify-center grid-cols-1 gap-6 p-3 justify-items-center sm:grid-cols-3">
 					<div className="self-center sm:text-right">
-						<p>Вийти з облікового запису?</p>
+						<p>{t('preferences.logout_p')}</p>
 					</div>
 					<div className="col-span-2">
 						<button
 							onClick={handleLogout}
 							className="p-3 min-w-[200px] leading-none bg-amber-600 hover:bg-amber-500 transition-colors rounded-xl">
-							Вихід
+							{t('preferences.logout')}
 						</button>
 					</div>
 				</div>

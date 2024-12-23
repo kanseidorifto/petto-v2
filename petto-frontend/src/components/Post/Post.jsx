@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import Popup from 'reactjs-popup';
 import dayjs from 'dayjs';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -27,6 +28,7 @@ import {
 import useModal from '../../hooks/useModal';
 
 const Post = ({ id, profileId }) => {
+	const { t } = useTranslation();
 	const { post: userProfilePost } = useGetUserPostListQuery(profileId, {
 		selectFromResult: ({ data }) => ({
 			post: data?.items?.find((post) => post.id === id),
@@ -212,12 +214,12 @@ const Post = ({ id, profileId }) => {
 								handleSendComment();
 							}
 						}}
-						placeholder="Додайте коментар..."
+						placeholder={t('post.comment.placeholder')}
 					/>
 					<button
 						onClick={handleSendComment}
 						className="p-2 text-base font-medium transition-colors rounded-md shadow text-violet-100 bg-violet-300/20 hover:bg-violet-300/50">
-						Опублікувати
+						{t('post.comment.publish')}{' '}
 					</button>
 				</div>
 			</div>

@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useCancelFriendRequestMutation, useGetFriendListQuery } from '../../services/authService';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const FriendList = () => {
+	const { t } = useTranslation();
 	const { userInfo } = useSelector((state) => state.auth);
 	useEffect(() => {
-		document.title = 'Petto - Список друзів';
+		document.title = 'Petto - ' + t('friends.head.title');
 		return () => {
 			document.title = 'Petto';
 		};
@@ -37,16 +39,27 @@ const FriendList = () => {
 				friendRequest.profileRequest.id === userInfo.id
 					? friendRequest.profileAccept
 					: friendRequest.profileRequest,
-		  );
+		);
 
 	const handleCancelFriend = async (friend) => {
 		if (
-			confirm('❌ Видалити' + ' ' + friend.givenName + ' ' + friend.surname + ' із друзів ' + '?')
+			confirm(
+				t('friends.deleteAlert.confirm', { givenName: friend.givenName, surname: friend.surname }),
+			)
 		)
 			toast.promise(cancelFriendRequest(friend.id).unwrap(), {
-				pending: `Вилучення ${friend.givenName + ' ' + friend.surname} із списку друзів 😔`,
-				success: `${friend.givenName + ' ' + friend.surname} успішно вилучений із друзів 😒`,
-				error: `Помилка видалення ${friend.givenName + ' ' + friend.surname} із списку друзів 🤯`,
+				pending: t('friends.deleteAlert.pending', {
+					givenName: friend.givenName,
+					surname: friend.surname,
+				}),
+				success: t('friends.deleteAlert.success', {
+					givenName: friend.givenName,
+					surname: friend.surname,
+				}),
+				error: t('friends.deleteAlert.error', {
+					givenName: friend.givenName,
+					surname: friend.surname,
+				}),
 			});
 	};
 
@@ -59,7 +72,7 @@ const FriendList = () => {
 					className="flex-1 p-1 text-base bg-transparent rounded appearance-none resize-none placeholder:text-white placeholder:font-light focus:bg-violet-300/50 focus:outline-none focus:border-none focus:ring-none"
 					value={searchText}
 					onChange={(e) => setSearchText(e.target.value)}
-					placeholder="Пошук..."
+					placeholder={t('friends.search.placeholder')}
 				/>
 			</div>
 			<div className="px-4 py-2 space-y-2 text-white">
@@ -80,19 +93,19 @@ const FriendList = () => {
 												<Link
 													to={`/profile/${friend.id}`}
 													className="text-neutral-300 hover:underline">
-													Переглянути профіль
+													{t('friends.search.entry.view_profile')}{' '}
 												</Link>
 												{false && (
 													<Link
 														to={`/message/${friend.id}`}
 														className="text-neutral-300 hover:underline">
-														Написати повідомлення
+														{t('friends.search.entry.write_message')}{' '}
 													</Link>
 												)}
 												<button
 													onClick={() => handleCancelFriend(friend)}
 													className="p-1.5 leading-none transition-all bg-red-600 border border-red-700 rounded-md hover:bg-red-100 hover:text-red-400">
-													Видалити із друзів
+													{t('friends.search.entry.cancel_friendship')}{' '}
 												</button>
 											</div>
 										</div>
@@ -100,11 +113,15 @@ const FriendList = () => {
 								</div>
 							))
 						) : (
-							<p className="px-6 py-4 text-lg font-medium text-center">Нічого не знайдено. 😔</p>
+							<p className="px-6 py-4 text-lg font-medium text-center">
+								{t('friends.search.empty_list')}
+							</p>
 						)}
 					</div>
 				) : (
-					<p className="px-6 py-4 text-lg font-medium text-center">Завантаження... 🏃‍♂️</p>
+					<p className="px-6 py-4 text-lg font-medium text-center">
+						{t('friends.search.loading_list')}
+					</p>
 				)}
 			</div>
 		</main>

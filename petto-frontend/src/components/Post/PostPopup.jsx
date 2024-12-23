@@ -1,14 +1,16 @@
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { useRemoveUserPostMutation } from '../../services/postService';
 
 const PostPopup = ({ postId, own }) => {
+	const { t } = useTranslation();
 	const [removePost] = useRemoveUserPostMutation();
 	const onClickDelete = () => {
-		if (confirm('Видалити допис?')) {
+		if (confirm(t('post.popup.delete.confirm'))) {
 			toast.promise(removePost(postId).unwrap(), {
-				pending: 'Видалення допису...',
-				success: 'Допис успішно видалено 👌',
-				error: 'Помилка видалення допису 🤯',
+				pending: t('notifications.removePost.pending'),
+				success: t('notifications.removePost.success'),
+				error: t('notifications.removePost.error'),
 			});
 		}
 	};
@@ -17,7 +19,7 @@ const PostPopup = ({ postId, own }) => {
 			{/* <button className="p-2 text-sm leading-none">Копіювати посилання</button> */}
 			{own && (
 				<button onClick={onClickDelete} className="p-2 text-sm leading-none text-red-700">
-					Видалити допис
+					{t('post.popup.delete.delete_post')}
 				</button>
 			)}
 		</div>

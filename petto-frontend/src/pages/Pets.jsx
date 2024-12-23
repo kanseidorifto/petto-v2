@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import PetCard from '../components/Pets/PetCard';
 import CreatePetModal from '../components/Pets/CreatePetModal';
@@ -8,13 +9,14 @@ import { useGetUserPetListQuery } from '../services/petService';
 import UpdatePetModal from '../components/Pets/UpdatePetModal';
 
 const Pets = () => {
+	const { t } = useTranslation();
 	useEffect(() => {
-		document.title = 'Petto - Улюбленці';
+		document.title = 'Petto - ' + t('pets.head.title');
 		window.scrollTo(0, 0);
 		return () => {
 			document.title = 'Petto';
 		};
-	}, []);
+	}, [t]);
 	const [showCreateModal, setShowCreateModal] = useState({ show: false });
 	const [showUpdateModal, setShowUpdateModal] = useState({ show: false });
 	const { userInfo } = useSelector((state) => state.auth);
@@ -48,12 +50,12 @@ const Pets = () => {
 		<>
 			<main className="rounded-md bg-violet-400">
 				<div className="flex items-center justify-between px-6 py-3 text-white bg-violet-500 rounded-t-md">
-					<h2 className="text-base font-medium">Улюбленці користувача</h2>
+					<h2 className="text-base font-medium">{t('pets.title')}</h2>
 					{own && (
 						<button
 							onClick={openCreateModal}
 							className="px-4 py-2 text-xs font-semibold leading-none rounded-full bg-violet-700">
-							Додати
+							{t('pets.add_button')}
 						</button>
 					)}
 				</div>
@@ -70,10 +72,10 @@ const Pets = () => {
 						<section className="text-white rounded-md bg-violet-400">
 							<p className="px-6 py-10 text-lg font-medium text-center">
 								{petList.isLoading
-									? 'Завантаження... 🏃‍♂️'
+									? t('pets.loading_list')
 									: own
-									? 'Схоже у вас поки немає доданих улюбленців 😿'
-									: 'Користувач ще не додав жодного улюбленця 😔'}
+									? t('pets.empty_list_owner')
+									: t('pets.empty_list')}
 							</p>
 						</section>
 					)}

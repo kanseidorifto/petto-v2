@@ -11,6 +11,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
 import Popup from 'reactjs-popup';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 import MessageList from '../components/Chat/MessageList';
 import {
@@ -29,6 +30,7 @@ import { baseApi } from '../services/baseService';
 const WS_URL = import.meta.env.VITE_APP_WS_URL;
 
 const Conversation = () => {
+	const { t } = useTranslation();
 	const { chatId } = useParams();
 	const { userInfo, userToken } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
@@ -48,12 +50,12 @@ const Conversation = () => {
 	const iconUrl = chatInfo.data?.type === 0 ? personProfile.avatarUrl : chatInfo.data?.iconUrl;
 
 	useEffect(() => {
-		document.title = 'Petto - Чат ' + (chatInfo.isSuccess ? title : '');
+		document.title = 'Petto - '+t('chats.conversation.head.title')+ ' ' + (chatInfo.isSuccess ? title : '');
 		window.scrollTo(0, 0);
 		return () => {
 			document.title = 'Petto';
 		};
-	}, [chatInfo.isSuccess, title]);
+	}, [chatInfo.isSuccess, title, t]);
 
 	//
 	const [sendMessage] = useSendMessageMutation();
@@ -66,9 +68,10 @@ const Conversation = () => {
 
 		const message = new FormData();
 
+		const maxFiles = 5;
 		if (files.length > 0) {
-			if (files.length > 5) {
-				alert('Максимальна кількість файлів - 5');
+			if (files.length > maxFiles) {
+				alert(t('chats.conversation.maxFileCountAlert', { maxFiles }));
 				return;
 			}
 
@@ -90,7 +93,7 @@ const Conversation = () => {
 			await sendMessage({ chatId, message }).unwrap();
 			containerRef.current.scroll({ top: containerRef.current.scrollHeight, behavior: 'smooth' });
 		} catch {
-			toast.error('Помилка відправлення повідомлення');
+			toast.error(t('notifications.conversation.sendMessage.error'));
 		}
 	};
 
@@ -164,12 +167,12 @@ const Conversation = () => {
 	const [leaveChat] = useLeaveChatMutation();
 
 	const handleLeaveChat = async () => {
-		if (window.confirm('Покинути чат?')) {
+		if (window.confirm(t('chats.conversation.leaveChatAlert'))) {
 			try {
 				await leaveChat({ chatId }).unwrap();
 				navigate('/chats');
 			} catch {
-				toast.error('Помилка виходу з чату');
+				toast.error(t('notifications.conversation.leaveChat.error'));
 			}
 		}
 	};
@@ -209,9 +212,9 @@ const Conversation = () => {
 						<div className="flex-1">
 							<p className="font-bold">{title}</p>
 							{chatInfo.data.type === 0 ? (
-								<span className="text-neutral-300">Не в мережі</span>
+								<span className="text-neutral-300">{t('chats.conversation.notOnline')}</span>
 							) : (
-								<span className="text-neutral-300">1 в мережі</span>
+								<span className="text-neutral-300">{t('chats.conversation.online_one')}</span>
 							)}
 						</div>
 						{chatInfo.data.type !== 0 && (
@@ -232,14 +235,12 @@ const Conversation = () => {
 										<button
 											onClick={() => (setOpenPopup(false), open(chatInfo.data))}
 											className="p-2 leading-none text-white">
-											Налаштування групи
-										</button>
+											{t('chats.conversation.groupSettings')}	</button>
 									) : (
 										<button
 											onClick={() => (setOpenPopup(false), handleLeaveChat())}
 											className="p-2 leading-none text-red-400 bg-red-400/20">
-											Покинути
-										</button>
+											{t('chats.conversation.leaveChat')}	</button>
 									)}
 								</div>
 							</Popup>
@@ -301,7 +302,7 @@ const Conversation = () => {
 								handleSendMessage();
 							}
 						}}
-						placeholder="Написати вістойку..."
+						placeholder={t('chats.conversation.sendMessagePlaceholder')}
 					/>
 					<button
 						onClick={handleSendMessage}
@@ -314,7 +315,7 @@ const Conversation = () => {
 				<div className="max-lg:hidden">
 					<aside className="w-64 rounded-md xl:w-72 bg-violet-400">
 						<div className="flex items-center justify-between px-6 py-4 text-white bg-violet-500 rounded-t-md">
-							<h2 className="text-base font-medium">Інформація про чат</h2>
+							<h2 className="text-base font-medium">{t('chats.conversation.info.title')}</h2>
 						</div>
 						<div className="p-4 space-y-4 text-white">
 							<div className="flex flex-col items-center gap-2">
@@ -330,7 +331,7 @@ const Conversation = () => {
 									</div>
 								)}
 								<p className="text-lg font-bold">{chatInfo.data.title}</p>
-								<p className="text-sm font-medium">Учасники</p>
+								<p className="text-sm font-medium">{t('chats.conversation.info.members')}</p>
 								<div className="flex flex-wrap justify-center gap-2">
 									{chatInfo.data.participants.map((participant) => (
 										<Link
@@ -352,14 +353,12 @@ const Conversation = () => {
 									<button
 										onClick={() => open(chatInfo.data)}
 										className="w-full bg-violet-600 text-white text-sm leading-none p-2.5 rounded-xl hover:opacity-70 transition-opacity">
-										Налаштування групи
-									</button>
+										{t('chats.conversation.groupSettings')}	</button>
 								) : (
 									<button
 										onClick={handleLeaveChat}
 										className="w-full bg-red-600 text-white text-sm leading-none p-2.5 rounded-xl hover:opacity-70 transition-opacity">
-										Покинути
-									</button>
+										{t('chats.conversation.leaveChat')}	</button>
 								)}
 							</div>
 						</div>

@@ -1,17 +1,16 @@
+import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import Post from '../components/Post/Post';
-import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import FeedPostList from '../components/Post/FeedPostList';
-import { useState } from 'react';
 import AllPostList from '../components/Post/AllPostList';
 
-const options = [
+const options = (t) => [
 	{
-		label: 'Підписки',
+		label: t('feed.options.following'),
 		href: '/feed',
 	},
 	{
-		label: 'Популярне',
+		label: t('feed.options.popular'),
 		href: '/feed/popular',
 	},
 ];
@@ -33,9 +32,10 @@ const Option = ({ label, href }) => {
 };
 
 const Feed = () => {
+	const { t } = useTranslation();
 	const [activeTab, setActiveTab] = useState(0);
 	useEffect(() => {
-		document.title = 'Petto - Стрічка новин';
+		document.title = 'Petto - ' + t('feed.head.title');
 		return () => {
 			document.title = 'Petto';
 		};
@@ -50,7 +50,7 @@ const Feed = () => {
 				<aside className="inline-block w-full text-white rounded-md lg:w-64 bg-violet-400">
 					<nav>
 						<ul className="p-3 space-y-3 text-base leading-none">
-							{options.map((option, index) => (
+							{options(t).map((option, index) => (
 								<li key={index} onClick={() => setActiveTab(index)}>
 									<Option {...option} />
 								</li>

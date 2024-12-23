@@ -1,0 +1,402 @@
+{
+	"profile": {
+		"pets_widget": {
+			"title": "Pets",
+			"empty_pet_list": "No pets 😿",
+			"view_more": "View more"
+		},
+		"main": {
+			"new_post": "New post",
+			"posts": "Posts"
+		},
+		"head_title": "Profile",
+		"header": {
+			"edit_profile": "Edit profile",
+			"add_friend": "Add friend",
+			"write_message": "Write a message"
+		},
+		"pet": {
+			"breed": "Breed",
+			"age": "Age",
+			"bio": "Biography",
+			"owner": "Owner"
+		},
+		"sendPrivateMessage": {
+			"alert": "The message cannot be empty",
+			"title": "Send a message",
+			"send": "Send"
+		}
+	},
+	"notifications": {
+		"sendFriendRequest": {
+			"pending": "Sending a friend request...",
+			"success": "Request sent successfully 👌",
+			"error": "Error sending friend request. \nPerhaps such a request already exists. 🤯"
+		},
+		"updateProfile": {
+			"pending": "Renewal...",
+			"success": "Profile successfully updated 👌",
+			"error": "Profile update error 🤯"
+		},
+		"conversation": {
+			"sendMessage": {
+				"error": "Error sending message"
+			},
+			"leaveChat": {
+				"error": "Chat exit error"
+			}
+		},
+		"sendPrivateMessage": {
+			"pending": "Sending a message 💬",
+			"success": "Message sent successfully 👌",
+			"error": "Error sending the message 🤯"
+		},
+		"recognizePet": {
+			"pending": "Pet recognition 👀",
+			"success": "Successfully recognized 👌",
+			"error": "Recognition error 🤯"
+		},
+		"removePost": {
+			"pending": "Deleting post...",
+			"success": "The post has been successfully deleted 👌",
+			"error": "Error deleting post 🤯"
+		},
+		"createPost": {
+			"pending": "Creating a post 📄",
+			"success": "The post has been successfully created 👌",
+			"error": "Error creating a post 🤯"
+		},
+		"createPet": {
+			"pending": "Adding pet {{givenName}} 😽",
+			"success": "{{givenName}} successfully added 👌",
+			"error": "Error adding {{givenName}} 🤯"
+		},
+		"removePet": {
+			"pending": "Deleting pet {{name}} 😿",
+			"success": "{{name}} successfully deleted 👌",
+			"error": "Error deleting {{name}} 🤯"
+		},
+		"updatePet": {
+			"pending": "Pet update {{name}} 😺",
+			"success": "{{name}} successfully updated 👌",
+			"error": "Error updating {{name}} 🤯"
+		},
+		"removeChat": {
+			"pending": "Deleting the chat...",
+			"success": "Chat successfully deleted 👌",
+			"error": "Error deleting chat 🤯"
+		},
+		"createGroupChat": {
+			"empty_members_list": "Add members to the chat",
+			"pending": "Creating a chat {{title}} 💬",
+			"success": "Chat {{title}} successfully created 👌",
+			"error": "Error creating chat {{title}} 🤯"
+		},
+		"updateGroupChat": {
+			"pending": "Chat update {{title}} 💬",
+			"success": "Chat {{title}} successfully updated 👌",
+			"error": "Error updating chat {{title}} 🤯"
+		}
+	},
+	"sidenavbar": {
+		"profile": "Profile",
+		"feed": "Feed",
+		"search": "Search",
+		"messages": "Messages",
+		"friends": "Friends",
+		"pets": "Pets",
+		"preferences": "Preferences"
+	},
+	"search": {
+		"head": {
+			"title_people": "people",
+			"title_pets": "pets"
+		},
+		"find": "Find",
+		"type": {
+			"people": "People",
+			"pets": "Pets"
+		},
+		"entry": {
+			"view_profile": "View profile",
+			"view_owner_profile": "View the owner's profile"
+		},
+		"empty_list": "Nothing found. 😔",
+		"loading_list": "Loading... 🏃‍♂️",
+		"prompting_message": "To search for people, enter the text...⌨"
+	},
+	"feed": {
+		"options": {
+			"following": "Following",
+			"popular": "Popular"
+		},
+		"head": {
+			"title": "Feed"
+		},
+		"loading_list": "Loading... 🏃‍♂️",
+		"empty_list": "It looks like you have no posts yet 😿"
+	},
+	"friends": {
+		"head": {
+			"title": "Friends list"
+		},
+		"search": {
+			"placeholder": "Search...",
+			"entry": {
+				"view_profile": "View profile",
+				"write_message": "Write a message",
+				"cancel_friendship": "Remove from friends"
+			},
+			"empty_list": "Nothing found. 😔",
+			"loading_list": "Loading... 🏃‍♂️"
+		},
+		"deleteAlert": {
+			"confirm": "❌ Remove {{givenName}} {{surname}} from friends?",
+			"error": "Error removing {{givenName}} {{surname}} from friends list 🤯",
+			"pending": "Removing {{givenName}} {{surname}} from friend list 😔",
+			"success": "{{givenName}} {{surname}} successfully unfriended 😒"
+		},
+		"requests": {
+			"head": {
+				"title": {
+					"incoming": "Incoming requests",
+					"outcoming": "Sent requests"
+				}
+			},
+			"options": {
+				"incoming": "Incoming",
+				"outcoming": "Sent"
+			},
+			"entry": {
+				"accept": "Accept the request",
+				"reject": "Reject the request"
+			},
+			"acceptAlert": {
+				"confirm": "✅ Accept friend request from {{givenName}} {{surname}}?",
+				"error": "Error accepting friend request from {{givenName}} {{surname}} 🤯",
+				"pending": "Accepting friend request from {{givenName}} {{surname}} 🧐",
+				"success": "{{givenName}} {{surname}} successfully added to friends 👌"
+			},
+			"cancelAlert": {
+				"confirm": "❌ Decline friend request {{direction}} {{givenName}} {{surname}}?",
+				"error": "Error rejecting friend request {{direction}} {{givenName}} {{surname}} 🤯",
+				"from": "from",
+				"pending": "Declining friend request {{direction}} {{givenName}} {{surname}} 🧐",
+				"success": "Request {{direction}} {{givenName}} {{surname}} successfully rejected 😒",
+				"to": "to"
+			}
+		},
+		"options": {
+			"friends": "My friends",
+			"requests": "Requests"
+		}
+	},
+	"pets": {
+		"head": {
+			"title": "Pets"
+		},
+		"title": "User's pets",
+		"add_button": "Add",
+		"loading_list": "Loading... 🏃‍♂️",
+		"empty_list_owner": "It looks like you don't have any added pets yet 😿",
+		"empty_list": "The user has not added any pets yet 😔",
+		"createPetModal": {
+			"title": "Add a pet",
+			"photo": {
+				"change": "Change",
+				"add": "Add",
+				"avatar": "Photo"
+			},
+			"givenName_placeholder": "Enter the pet's nickname",
+			"breed_placehoder": "Enter the breed of the pet",
+			"age_placeholder": "Enter the pet's age"
+		},
+		"givenName": "Alias",
+		"breed": "Breed",
+		"age": "Age",
+		"bio": "Biog",
+		"removePetConfirm": "Delete the pet?",
+		"popup": {
+			"view_profile": "View profile",
+			"edit": "Change",
+			"remove": "Delete the pet"
+		},
+		"updatePetModal": {
+			"title": "Edit pet",
+			"submit": "Edit"
+		}
+	},
+	"preferences": {
+		"head": {
+			"title": "Settings"
+		},
+		"profiile": {
+			"loading": "Loading... 🏃‍♂️",
+			"change_avatar": "Change main photo",
+			"change_cover": "Change cover",
+			"avatar": "Photo",
+			"cover": "Profile cover",
+			"edit": "Change",
+			"givenName": "First name",
+			"surname": "Last name",
+			"bio": "Biography",
+			"givenName_placeholder": "Enter your first name",
+			"surname_placeholder": "Enter your last name",
+			"changePictureModal": {
+				"add": "Add",
+				"submit": "Confirm"
+			},
+			"language": "Interface language"
+		},
+		"save_changes": "Save changes",
+		"options": {
+			"edit_profile": "Edit profile",
+			"sign_out": "Sign out"
+		},
+		"confirmLeave": "Are you sure to sign out?",
+		"logout_p": "Sign out of your account",
+		"logout": "Logout",
+		"security": {
+			"old_password": "Old password",
+			"old_password_placeholder": "Enter your old password",
+			"new_password": "New password",
+			"new_password_placeholder": "Enter a new password",
+			"repeat_password": "Re-enter password",
+			"repeat_password_placeholder": "Re-enter your password"
+		}
+	},
+	"auth": {
+		"head": {
+			"title": "Sign In"
+		},
+		"slogan": "social network for pet owners",
+		"login": {
+			"email_placeholder": "Enter your email address",
+			"email": "E-mail",
+			"password_placeholder": "Enter the password",
+			"password": "Password",
+			"signin": "Sign in",
+			"create_new": "Create a new account"
+		},
+		"loading": "Loading...",
+		"register": {
+			"passwordMismatchAlert": "Password mismatch",
+			"title": "Registration",
+			"givenName_placeholder": "Enter your name",
+			"givenName": "First name",
+			"surname_placeholder": "Enter last name",
+			"surname": "Last name",
+			"email_placeholder": "Enter your e-mail address",
+			"email": "E-mail",
+			"password_placeholder": "Enter a password",
+			"password": "Password",
+			"password_repeat_placeholder": "Enter the password again",
+			"password_repeat": "Repeat the password",
+			"loading": "Wait...",
+			"signup": "Register"
+		}
+	},
+	"chats": {
+		"head": {
+			"title": "Chats"
+		},
+		"create_chat": "Create chat",
+		"empty_list": "Nothing found. 😔",
+		"conversation": {
+			"head": {
+				"title": "Chat"
+			},
+			"maxFileCountAlert": "Maximum number of files - {{maxFiles}}",
+			"leaveChatAlert": "Leave chat?",
+			"notOnline": "Not online",
+			"online_one": "1 online",
+			"groupSettings": "Chat settings",
+			"leaveChat": "Leave",
+			"sendMessagePlaceholder": "Write a message...",
+			"info": {
+				"title": "Chat information",
+				"members": "Participants"
+			}
+		},
+		"item": {
+			"current_user_is_last_sender": "You",
+			"type": {
+				"picture": "Picture"
+			},
+			"message": "*message*"
+		},
+		"removeChatConfirm": "Delete chat?",
+		"popup": {
+			"remove": "Delete chat"
+		},
+		"createChatModal": {
+			"title": "Create a group chat",
+			"photo": {
+				"edit": "Change",
+				"add": "Add",
+				"avatar": "Picture"
+			},
+			"chat_title": "Title",
+			"add_participants": "Add participants",
+			"participants": {
+				"add": "Add"
+			},
+			"submit": "Create"
+		},
+		"deleteChatConfirm": "Are you sure you want to delete chat {{title}}?",
+		"updateChatModal": {
+			"title": "Edit chat",
+			"submit": "Update",
+			"delete": "Delete"
+		},
+		"message_list": {
+			"unsupportedMessage": "Unsupported message type"
+		}
+	},
+	"mobilenavbar": {
+		"title": "Navigation"
+	},
+	"post": {
+		"recognizePostModal": {
+			"title": "Recognize the post",
+			"result": "Result",
+			"recognize": "Recognize!"
+		},
+		"popup": {
+			"delete": {
+				"confirm": "Delete post?",
+				"delete_post": "Delete post"
+			}
+		},
+		"list": {
+			"loading": "Loading... 🏃‍♂️",
+			"empty_owner": "It looks like you have no posts yet 😿",
+			"empty": "The user has not added any post yet 😔",
+			"empty_pet": "Looks like {{pet_name}} has no posts yet 😿"
+		},
+		"comment": {
+			"placeholder": "Add a comment...",
+			"publish": "Publish"
+		},
+		"createPostModal": {
+			"title": "Create a post",
+			"add_pictures": "Add photos",
+			"add_picture": "Add a photo",
+			"clear_pictures": "Clear all",
+			"text_placeholder": "What's new with you?",
+			"tag_pets": "Tag your pets",
+			"tag_pet": "Add",
+			"publish": "Publish"
+		}
+	},
+	"age_one": "{{count}} year",
+	"age_other": "{{count}} years",
+	"age_few": "{{count}} years",
+	"age_many": "{{count}} years",
+	"languages": {
+		"list": {
+			"uk": "Ukrainian",
+			"en": "English"
+		}
+	}
+}

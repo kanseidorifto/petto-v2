@@ -1,6 +1,7 @@
 import Modal from 'react-modal';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Cropper } from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 
@@ -13,6 +14,7 @@ import { recognizePet } from '../../utils/recognizePet';
 Modal.setAppElement('#root');
 
 const RecognizePostModal = ({ modalKey }) => {
+	const { t } = useTranslation();
 	const { isModalOpen, modalData, close } = useModal(modalKey);
 
 	const [result, setResult] = useState(null);
@@ -38,9 +40,9 @@ const RecognizePostModal = ({ modalKey }) => {
 				await dataUrlToFile(cropped, `post-${Math.random(10000000)}.png`, 'image/png'),
 			);
 		const result = await toast.promise(recognizePet(formData), {
-			pending: `Розпізнавання допису 👀`,
-			success: `Допис успішно розпізнаний 👌`,
-			error: `Помилка розпізнавання 🤯`,
+			pending: t('notifications.recognizePet.pending'),
+			success: t('notifications.recognizePet.success'),
+			error: t('notifications.recognizePet.error'),
 		});
 		console.log(result);
 		setResult(result);
@@ -57,7 +59,7 @@ const RecognizePostModal = ({ modalKey }) => {
 			contentLabel="Recognize pet modal">
 			<div className="flex bg-white flex-col p-6 space-y-4 border rounded-md border-amber-500 z-20 &[ReactModal__Overlay--after-open:translate-y-0]">
 				<div className="flex items-center justify-between">
-					<p className="text-xl text-amber-500">Розпізнати допис</p>
+					<p className="text-xl text-amber-500">{t('post.recognizePostModal.title')}</p>
 					<button type="button" onClick={closeCurrentModal}>
 						<XMarkIcon className="w-6 h-6 text-black" />
 					</button>
@@ -79,7 +81,7 @@ const RecognizePostModal = ({ modalKey }) => {
 
 					{result && (
 						<div className="flex items-center gap-1 text-lg leading-none">
-							Результат -
+							{t('post.recognizePostModal.result')} -
 							<div className="flex flex-wrap gap-1">
 								<span className="px-2 py-1 text-xl font-semibold text-white border rounded-lg bg-amber-500">
 									{result.species}
@@ -97,7 +99,7 @@ const RecognizePostModal = ({ modalKey }) => {
 					<button
 						onClick={onSubmit}
 						className="py-2.5 px-3 text-white font-semibold leading-none border rounded-xl border-violet-700 bg-violet-600">
-						Розпізнати!
+						{t('post.recognizePostModal.recognize')}
 					</button>
 				</div>
 			</div>

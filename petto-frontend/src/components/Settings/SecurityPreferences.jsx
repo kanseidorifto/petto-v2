@@ -1,6 +1,8 @@
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 const SecurityPreferences = () => {
+	const { t } = useTranslation();
 	const {
 		register,
 		handleSubmit,
@@ -23,43 +25,49 @@ const SecurityPreferences = () => {
 			<div className="flex flex-col">
 				<div className="grid grid-cols-3 gap-6 p-3">
 					<div className="self-center text-right">
-						<p>Старий пароль</p>
+						<p>{t('preferences.security.old_password')}</p>
 					</div>
 					<div className="col-span-2">
 						<input
 							type="text"
-							{...register('oldPassword', { required: 'Введіть старий пароль' })}
+							{...register('oldPassword', {
+								required: t('preferences.security.old_password_placeholder'),
+							})}
 							className="px-2 py-2 bg-transparent border rounded-md border-violet-700 focus:outline-none focus:ring-violet-800 focus:border-violet-800"
 						/>
 					</div>
 				</div>
 				<div className="grid grid-cols-3 gap-6 p-3">
 					<div className="self-center text-right">
-						<p>Новий пароль</p>
+						<p>{t('preferences.security.new_password')}</p>
 					</div>
 					<div className="col-span-2">
 						<input
 							type="text"
-							{...register('password', { required: 'Введіть новий пароль' })}
+							{...register('password', {
+								required: t('preferences.security.new_password_placeholder'),
+							})}
 							className="px-2 py-2 bg-transparent border rounded-md border-violet-700 focus:outline-none focus:ring-violet-800 focus:border-violet-800"
 						/>
 					</div>
 				</div>
 				<div className="grid grid-cols-3 gap-6 p-3">
 					<div className="self-center text-right">
-						<p>Повторно пароль</p>
+						<p>{t('preferences.security.repeat_password')}</p>
 					</div>
 					<div className="col-span-2">
 						<input
 							type="text"
-							{...register('repeatPassword', { required: 'Введіть повторно пароль' })}
+							{...register('repeatPassword', {
+								required: t('preferences.security.repeat_password_placeholder'),
+							})}
 							className="px-2 py-2 bg-transparent border rounded-md border-violet-700 focus:outline-none focus:ring-violet-800 focus:border-violet-800"
 						/>
 					</div>
 				</div>
 				<div className="p-3 text-center">
 					<button className="p-3 min-w-[200px] leading-none bg-violet-500 rounded-xl">
-						Зберегти зміни
+						{t('preferences.save_changes')}
 					</button>
 				</div>
 			</div>

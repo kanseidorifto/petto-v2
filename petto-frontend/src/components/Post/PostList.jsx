@@ -1,7 +1,9 @@
 import Post from './Post';
+import { useTranslation } from 'react-i18next';
 import { useGetUserPostListQuery } from '../../services/postService';
 
 const PostList = ({ profileId, own }) => {
+	const { t } = useTranslation();
 	const profilePostList = useGetUserPostListQuery(profileId);
 	return (
 		<>
@@ -13,10 +15,10 @@ const PostList = ({ profileId, own }) => {
 				<section className="text-white rounded-md bg-violet-400">
 					<p className="px-6 py-10 text-lg font-medium text-center">
 						{profilePostList.isFetching
-							? 'Завантаження... 🏃‍♂️'
+							? t('post.list.loading')
 							: own
-							? 'Схоже у вас поки немає дописів 😿'
-							: 'Користувач ще не додав жодного допису 😔'}
+							? t('post.list.empty_owner')
+							: t('post.list.empty')}
 					</p>
 				</section>
 			)}

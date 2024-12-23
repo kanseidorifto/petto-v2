@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import { useLazySearchUserQuery } from '../services/authService';
 import { useDebounce } from '../hooks/useDebounce';
 
 const Search = () => {
+	const { t } = useTranslation();
 	const [searchText, setSearchText] = useState('');
 	const [activeTab, setActiveTab] = useState(0);
 	const [initial, setInitial] = useState(true);
@@ -13,21 +15,21 @@ const Search = () => {
 		let tab;
 		switch (activeTab) {
 			case 0:
-				tab = 'людей';
+				tab = t('search.head.title_people');
 				break;
 			case 1:
-				tab = 'улюбленців';
+				tab = t('search.head.title_pets');
 				break;
 			default:
 				tab = '';
 				break;
 		}
-		document.title = 'Petto - Пошук ' + tab;
+		document.title = 'Petto - ' + t('sidenavbar.search') + ' ' + tab;
 		window.scrollTo(0, 0);
 		return () => {
 			document.title = 'Petto';
 		};
-	}, [activeTab]);
+	}, [activeTab, t]);
 
 	const debouncedRequest = useDebounce(() => {
 		searchUser(searchText);
@@ -49,12 +51,12 @@ const Search = () => {
 						setSearchText(e.target.value);
 						debouncedRequest();
 					}}
-					placeholder="Пошук..."
+					placeholder={t('sidenavbar.search') + '...'}
 				/>
 				<button
 					onClick={handleSearch}
 					className="rounded-full leading-none font-semibold text-xs py-1.5 px-2.5 bg-amber-500">
-					Знайти
+					{t('search.find')}
 				</button>
 			</div>
 			<div className="px-4 py-2 space-y-2 text-white">
@@ -66,7 +68,7 @@ const Search = () => {
 								'px-2 py-2 border-2 hover:bg-violet-300/50 transition-all font-medium leading-none min-w-[10rem] border-violet-300 rounded-md' +
 								(activeTab === 0 ? ' bg-violet-300/50' : '')
 							}>
-							Люди
+							{t('search.type.people')}
 						</button>
 						<button
 							onClick={() => setActiveTab(1)}
@@ -74,7 +76,7 @@ const Search = () => {
 								'px-2 py-2 border-2 hover:bg-violet-300/50 transition-all font-medium leading-none min-w-[10rem] border-violet-300 rounded-md' +
 								(activeTab === 1 ? ' bg-violet-300/50' : '')
 							}>
-							Улюбленці
+							{t('search.type.pets')}
 						</button>
 					</div>
 				)}
@@ -95,14 +97,16 @@ const Search = () => {
 												<Link
 													to={`/profile/${user.id}`}
 													className="text-neutral-300 hover:underline">
-													Переглянути профіль
+													{t('search.entry.view_profile')}{' '}
 												</Link>
 											</div>
 										</div>
 									</div>
 								))
 							) : (
-								<p className="px-6 py-4 text-lg font-medium text-center">Нічого не знайдено. 😔</p>
+								<p className="px-6 py-4 text-lg font-medium text-center">
+									{t('search.empty_list')}
+								</p>
 							)}
 							{activeTab === 1 &&
 								new Array(10).fill(0).map((obj, index) => (
@@ -123,10 +127,10 @@ const Search = () => {
 												</Link>
 												<div className="flex space-x-2">
 													<Link to={'/pets/1'} className="text-neutral-300 hover:underline">
-														Переглянути профіль
+														{t('search.entry.view_profile')}{' '}
 													</Link>
 													<Link to={'/profile'} className="text-neutral-300 hover:underline">
-														Переглянути профіль власника
+														{t('search.entry.view_owner_profile')}{' '}
 													</Link>
 												</div>
 											</div>
@@ -135,11 +139,11 @@ const Search = () => {
 								))}
 						</div>
 					) : (
-						<p className="px-6 py-4 text-lg font-medium text-center">Завантаження... 🏃‍♂️</p>
+						<p className="px-6 py-4 text-lg font-medium text-center">{t('search.loading_list')}</p>
 					)
 				) : (
 					<p className="px-6 py-4 text-lg font-medium text-center">
-						Для пошуку людей введіть текст...⌨
+						{t('search.prompting_message')}{' '}
 					</p>
 				)}
 			</div>

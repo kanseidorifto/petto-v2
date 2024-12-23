@@ -4,6 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useState, useRef } from 'react';
 import { Cropper } from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
+import { useTranslation } from 'react-i18next';
 
 import { dataUrlToFile } from '../../utils/dataUrlToFile';
 import { useCreatePetMutation } from '../../services/petService';
@@ -14,6 +15,7 @@ import { file2Base64 } from '../../utils/file2Base64';
 Modal.setAppElement('#root');
 
 const CreatePetModal = ({ modalIsOpen, closeModal }) => {
+	const { t } = useTranslation();
 	const {
 		register,
 		handleSubmit,
@@ -75,9 +77,9 @@ const CreatePetModal = ({ modalIsOpen, closeModal }) => {
 				await dataUrlToFile(cropped, `petAvatar-${Math.random(10000000)}.png`, 'image/png'),
 			);
 		toast.promise(createPet(formData).unwrap(), {
-			pending: `Створення улюбленця ${values.givenName} 😽`,
-			success: `${values.givenName} успішно створений 👌`,
-			error: `Помилка створення ${values.givenName}  🤯`,
+			pending: t('notifications.createPet.pending', { givenName: values.givenName }),
+			success: t('notifications.createPet.success', { givenName: values.givenName }),
+			error: t('notifications.createPet.error', { givenName: values.givenName }),
 		});
 		closeCurrentModal();
 	};
@@ -91,9 +93,9 @@ const CreatePetModal = ({ modalIsOpen, closeModal }) => {
 				await dataUrlToFile(cropped, `petAvatar-${Math.random(10000000)}.png`, 'image/png'),
 			);
 		const result = await toast.promise(recognizePet(formData), {
-			pending: `Розпізнавання улюбленця 👀`,
-			success: `Улюбленець успішно розпізнаний 👌`,
-			error: `Помилка розпізнавання 🤯`,
+			pending: t('notifications.recognizePet.pending'),
+			success: t('notifications.recognizePet.success'),
+			error: t('notifications.recognizePet.error'),
 		});
 		console.log(result);
 		setValue('breed', result.breed ? result.breed : result.species);
@@ -112,7 +114,7 @@ const CreatePetModal = ({ modalIsOpen, closeModal }) => {
 				onSubmit={handleSubmit(onSubmit)}
 				className="flex bg-white flex-col p-6 space-y-4 border rounded-md border-amber-500 &[ReactModal__Overlay--after-open:translate-y-0]">
 				<div className="flex items-center justify-between">
-					<p className="text-xl text-amber-500">Додати улюбленця</p>
+					<p className="text-xl text-amber-500">{t('pets.createPetModal.title')}</p>
 					<button type="button" onClick={closeCurrentModal}>
 						<XMarkIcon className="w-6 h-6 text-black" />
 					</button>
@@ -146,7 +148,7 @@ const CreatePetModal = ({ modalIsOpen, closeModal }) => {
 								ref={cropperRef}
 							/>
 							<button type="button" onClick={() => fileRef.current?.click()}>
-								Змінити
+								{t('pets.createPetModal.photo.change')}
 							</button>
 						</div>
 					) : (
@@ -155,51 +157,51 @@ const CreatePetModal = ({ modalIsOpen, closeModal }) => {
 								type="button"
 								onClick={() => fileRef.current?.click()}
 								className="w-48 h-48 transition-all bg-cover border rounded-md brightness-90 border-violet-500 bg-violet-300 hover:bg-violet-300/50">
-								<span className="text-violet-700">Додати</span>
+								<span className="text-violet-700">{t('pets.createPetModal.photo.add')}</span>
 							</button>
 						</>
 					)}
-					<p>Фото</p>
+					<p>{t('pets.createPetModal.photo.avatar')}</p>
 				</div>
 				<div className="space-y-2">
 					<div className="flex items-center justify-between w-full space-x-4">
-						<span>Кличка</span>
+						<span>{t('pets.givenName')}</span>
 						<input
 							type="text"
-							{...register('givenName', { required: 'Введіть кличку улюбленця' })}
+							{...register('givenName', { required: t('pets.createPetModal.givenName_placeholder') })}
 							className="px-2 py-2 border rounded-md border-amber-500 focus:outline-none focus:ring-amber-800 focus:border-amber-800"
 						/>
 					</div>
 					<div className="flex items-center justify-between w-full space-x-4">
 						<div className="flex gap-2">
-							<span>Порода</span>
+							<span>{t('pets.breed')}</span>
 							{uploaded && (
 								<button
 									type="button"
 									onClick={handleRecognize}
 									className="rounded-full leading-none font-semibold text-sm py-1.5 px-2 text-white bg-amber-500">
-									Розпізнати!
+									{t('post.recognizePostModal.recognize')}
 								</button>
 							)}
 						</div>
 						<input
 							type="text"
-							{...register('breed', { required: 'Введіть породу улюбленця' })}
+							{...register('breed', { required: t('pets.createPetModal.breed_placehoder') })}
 							className="px-2 py-2 border rounded-md border-amber-500 focus:outline-none focus:ring-amber-800 focus:border-amber-800"
 						/>
 					</div>
 					<div className="flex items-center justify-between w-full space-x-4">
-						<span>Вік</span>
+						<span>{t('pets.age')}</span>
 						<input
 							type="number"
 							min={0}
 							max={100}
-							{...register('age', { required: 'Введіть  вік улюбленця' })}
+							{...register('age', { required: t('pets.createPetModal.age_placeholder') })}
 							className="px-2 py-2 border rounded-md w-max border-amber-500 focus:outline-none focus:ring-amber-800 focus:border-amber-800"
 						/>
 					</div>
 					<div className="flex items-center justify-between w-full space-x-4">
-						<span>Біографія</span>
+						<span>{t('pets.bio')}</span>
 						<input
 							{...register('bio')}
 							type="text"
@@ -210,7 +212,7 @@ const CreatePetModal = ({ modalIsOpen, closeModal }) => {
 				<button
 					type="submit"
 					className="p-2.5 text-white font-semibold leading-none border rounded-xl border-violet-700 bg-violet-600">
-					Додати
+					{t('pets.add_button')}
 				</button>
 			</form>
 		</Modal>
