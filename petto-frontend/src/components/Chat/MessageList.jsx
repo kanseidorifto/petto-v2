@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
@@ -12,10 +13,13 @@ import {
 import { MessageType } from '../../utils/enums';
 
 const UnsupportedMessage = ({ message }) => {
+	const { t } = useTranslation();
 	if (!message) return null;
 
 	const messageCopy = JSON.parse(JSON.stringify(message));
-	messageCopy.messageText = <i className="text-neutral-300">Непідтримуваний тип повідомлення</i>;
+	messageCopy.messageText = (
+		<i className="text-neutral-300">{t('chats.message_list.unsupportedMessage')}</i>
+	);
 
 	return <TextMessage message={messageCopy} />;
 };
@@ -54,7 +58,7 @@ const BaseUserMessage = ({ message, children, readedBy, userInfo }) => {
 						<>
 							<CheckIcon className="w-4 h-4 text-neutral-200" />
 							{readedBy?.length > 0 && (
-								<div className="flex items-center -translate-x-4 space-x-1">
+								<div className="flex items-center space-x-1 -translate-x-4">
 									<CheckIcon className="w-4 h-4 text-neutral-200" />
 									{readedBy.map((profile) => (
 										<Link key={profile.id} to={'/profile/' + profile.id}>
@@ -94,7 +98,7 @@ const ImageMessage = ({ message, ...props }) => {
 						<img
 							src={imageUrl}
 							alt="image"
-							className="w-80 h-auto object-cover rounded-md peer"
+							className="object-cover h-auto rounded-md w-80 peer"
 							style={{ display: 'none' }}
 							onLoad={(e) => ((e.target.style.display = ''), e.target.classList.add('loaded'))}
 						/>
@@ -202,7 +206,7 @@ const MessageList = ({ chatId, chatInfo, containerRef }) => {
 	);
 
 	return (
-		<div className="flex justify-end flex-col-reverse gap-2 text-white py-2">
+		<div className="flex flex-col-reverse justify-end gap-2 py-2 text-white">
 			{groupedMessages &&
 				Object.keys(groupedMessages).map((date) => (
 					<div key={date} className="flex flex-col-reverse gap-2">

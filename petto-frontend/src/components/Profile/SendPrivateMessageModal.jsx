@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 import useModal from '../../hooks/useModal';
 import { useSendPrivateMessageMutation } from '../../services/chatService';
@@ -13,6 +14,7 @@ import ReactTextareaAutosize from 'react-textarea-autosize';
 Modal.setAppElement('#root');
 
 const SendPrivateMessageModal = ({ modalKey }) => {
+	const { t } = useTranslation();
 	const navigate = useNavigate();
 	const { isModalOpen, modalData, close } = useModal(modalKey);
 	const {
@@ -44,7 +46,7 @@ const SendPrivateMessageModal = ({ modalKey }) => {
 
 	const onSubmit = async (values) => {
 		if (values.messageText.trim() === '') {
-			toast.error('Повідомлення не може бути порожнім');
+			toast.error(t('profile.sendPrivateMessage.alert'));
 			return;
 		}
 
@@ -54,9 +56,9 @@ const SendPrivateMessageModal = ({ modalKey }) => {
 
 		toast
 			.promise(sendPrivateMessage({ userId: modalData?.id, message: formData }).unwrap(), {
-				pending: `Відправлення повідомлення 💬`,
-				success: `Повідомлення успішно відправлено 👌`,
-				error: `Помилка оновлення надсилання 🤯`,
+				pending: t('notifications.sendPrivateMessage.pending'),
+				success: t('notifications.sendPrivateMessage.success'),
+				error: t('notifications.sendPrivateMessage.error'),
 			})
 			.then((data) => {
 				console.log(data);
@@ -78,22 +80,21 @@ const SendPrivateMessageModal = ({ modalKey }) => {
 				onSubmit={handleSubmit(onSubmit)}
 				className="flex bg-white h-72 flex-col p-6 gap-4 border rounded-md border-amber-500 z-20 &[ReactModal__Overlay--after-open:translate-y-0]">
 				<div className="flex items-center justify-between">
-					<p className="text-xl text-amber-500">Надіслати повідомлення</p>
+					<p className="text-xl text-amber-500">{t('profile.sendPrivateMessage.title')}</p>
 					<button type="button" onClick={closeCurrentModal}>
 						<XMarkIcon className="w-6 h-6 text-black" />
 					</button>
 				</div>
 				<ReactTextareaAutosize
-					className="flex-1 p-1 text-base transition-colors bg-transparent rounded-md border resize-none placeholder:font-light hover:bg-amber-300/20 border-amber-500 focus:outline-none focus:ring-amber-800 focus:border-amber-800"
+					className="flex-1 p-1 text-base transition-colors bg-transparent border rounded-md resize-none placeholder:font-light hover:bg-amber-300/20 border-amber-500 focus:outline-none focus:ring-amber-800 focus:border-amber-800"
 					{...register('messageText', { required: true })}
-					placeholder="Написати вістойку..."
+					placeholder={t('chats.conversation.sendMessagePlaceholder')}
 				/>
 				<div className="flex flex-col gap-2">
 					<button
 						type="submit"
 						className="p-2.5 text-white font-semibold leading-none border rounded-xl border-violet-700 bg-violet-600">
-						Відправити
-					</button>
+						{t('profile.sendPrivateMessage.send')}	</button>
 				</div>
 			</form>
 		</Modal>

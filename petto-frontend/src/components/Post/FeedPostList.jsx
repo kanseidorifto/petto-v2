@@ -1,7 +1,9 @@
 import Post from './Post';
+import { useTranslation } from 'react-i18next';
 import { useGetMyFeedPostListQuery } from '../../services/postService';
 
 const FeedPostList = () => {
+	const { t } = useTranslation();
 	const feedPostList = useGetMyFeedPostListQuery();
 	return (
 		<>
@@ -10,7 +12,7 @@ const FeedPostList = () => {
 			) : (
 				<section className="text-white rounded-md bg-violet-400">
 					<p className="px-6 py-10 text-lg font-medium text-center">
-						{feedPostList.isLoading ? 'Завантаження... 🏃‍♂️' : 'Схоже у вас поки немає дописів 😿'}
+						{feedPostList.isLoading ? t('feed.loading_list') : t('feed.empty_list')}
 					</p>
 				</section>
 			)}

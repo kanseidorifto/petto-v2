@@ -1,8 +1,9 @@
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
-const options = [
+const options = (t) => [
 	{
-		label: 'Редагувати профіль',
+		label: t('preferences.options.edit_profile'),
 		href: '/settings/profile',
 	},
 	// {
@@ -10,7 +11,7 @@ const options = [
 	// 	href: '/settings/security',
 	// },
 	{
-		label: 'Вийти з облікового запису',
+		label: t('preferences.options.sign_out'),
 		href: '/settings/sign-out',
 	},
 ];
@@ -32,11 +33,12 @@ const Option = ({ label, href }) => {
 };
 
 const RequestListSidebar = () => {
+	const { t } = useTranslation();
 	return (
-		<aside className="inline-block w-full lg:w-64 text-white rounded-md bg-violet-400">
+		<aside className="inline-block w-full text-white rounded-md lg:w-64 bg-violet-400">
 			<nav>
 				<ul className="p-3 space-y-3 text-base leading-none">
-					{options.map((option, index) => (
+					{options(t).map((option, index) => (
 						<li key={index}>
 							<Option {...option} />
 						</li>

@@ -15,10 +15,12 @@ import { AddParticipantPopup } from './AddParticipantPopup';
 import { useGetFriendListQuery } from '../../services/authService';
 import Popup from 'reactjs-popup';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 Modal.setAppElement('#root');
 
 const CreateChatModal = ({ modalKey }) => {
+	const { t } = useTranslation();
 	const { isModalOpen, close } = useModal(modalKey);
 	const {
 		register,
@@ -102,7 +104,7 @@ const CreateChatModal = ({ modalKey }) => {
 		values.title && formData.append('title', values.title);
 
 		if (selectedUserList.length === 0) {
-			toast.error('Додайте учасників до чату');
+			toast.error(t('notifications.createGroupChat.empty_members_list'));
 			return;
 		}
 
@@ -115,9 +117,9 @@ const CreateChatModal = ({ modalKey }) => {
 			formData.append('participants', user.id);
 		});
 		toast.promise(createGroupChat(formData).unwrap(), {
-			pending: `Створення чату ${values.title || ''} 💬`,
-			success: `${values.title || 'Чат'} успішно створений 👌`,
-			error: `Помилка створення ${values.title || 'чату'}  🤯`,
+			pending: t('notifications.createGroupChat.pending', { title: values.title || '' }),
+			success: t('notifications.createGroupChat.success', { title: values.title || '' }),
+			error: t('notifications.createGroupChat.error', { title: values.title || '' }),
 		});
 		closeCurrentModal();
 	};
@@ -135,7 +137,7 @@ const CreateChatModal = ({ modalKey }) => {
 				onSubmit={handleSubmit(onSubmit)}
 				className="flex bg-white flex-col p-6 space-y-4 border rounded-md border-amber-500 z-20 &[ReactModal__Overlay--after-open:translate-y-0]">
 				<div className="flex items-center justify-between">
-					<p className="text-xl text-amber-500">Створити груповий чат</p>
+					<p className="text-xl text-amber-500">{t('chats.createChatModal.title')}</p>
 					<button type="button" onClick={closeCurrentModal}>
 						<XMarkIcon className="w-6 h-6 text-black" />
 					</button>
@@ -162,8 +164,7 @@ const CreateChatModal = ({ modalKey }) => {
 								ref={cropperRef}
 							/>
 							<button type="button" onClick={() => fileRef.current?.click()}>
-								Змінити
-							</button>
+								{t('chats.createChatModal.photo.edit')}	</button>
 						</div>
 					) : (
 						<>
@@ -171,15 +172,15 @@ const CreateChatModal = ({ modalKey }) => {
 								type="button"
 								onClick={() => fileRef.current?.click()}
 								className="w-48 h-48 transition-all bg-cover border rounded-md brightness-90 border-violet-500 bg-violet-300 hover:bg-violet-300/50">
-								<span className="text-violet-700">Додати</span>
+								<span className="text-violet-700">{t('chats.createChatModal.photo.add')}</span>
 							</button>
 						</>
 					)}
-					<p>Фото</p>
+					<p>{t('chats.createChatModal.photo.avatar')}</p>
 				</div>
 				<div className="space-y-2">
 					<div className="flex items-center w-full space-x-4">
-						<span>Назва</span>
+						<span>{t('chats.createChatModal.chat_title')}</span>
 						<input
 							type="text"
 							{...register('title')}
@@ -197,7 +198,7 @@ const CreateChatModal = ({ modalKey }) => {
 				</div>
 				<div className="p-2 border rounded-md border-violet-500 space-y-2.5">
 					<div className="flex items-center justify-between space-x-2">
-						<span className="text-neutral-600">Додайте учасників</span>
+						<span className="text-neutral-600">{t('chats.createChatModal.add_participants')}</span>
 
 						{!friendshipList.isFetching &&
 							!friendshipList.isError &&
@@ -207,8 +208,7 @@ const CreateChatModal = ({ modalKey }) => {
 										<button
 											type="button"
 											className="px-3 py-1 leading-none text-white rounded-full bg-violet-600">
-											Додати
-										</button>
+											{t('chats.createChatModal.participants.add')}	</button>
 									}
 									closeOnDocumentClick
 									open={openAddPopup}
@@ -255,8 +255,7 @@ const CreateChatModal = ({ modalKey }) => {
 				<button
 					type="submit"
 					className="p-2.5 text-white font-semibold leading-none border rounded-xl border-violet-700 bg-violet-600">
-					Створити
-				</button>
+					{t('chats.createChatModal.submit')}	</button>
 			</form>
 		</Modal>
 	);

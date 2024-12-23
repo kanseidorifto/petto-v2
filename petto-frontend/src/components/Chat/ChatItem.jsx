@@ -1,5 +1,6 @@
 // import Popup from 'reactjs-popup';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 // import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import dayjs from 'dayjs';
 // import ChatPopup from './ChatPopup';
@@ -7,6 +8,7 @@ import { MessageType } from '../../utils/enums';
 import { useMemo } from 'react';
 
 const ChatItem = ({ chat, userInfo }) => {
+	const {t} = useTranslation();
 	const personProfile =
 		chat.type == 0 &&
 		chat.participants.filter((participant) => participant.profile.id !== userInfo.id)[0].profile;
@@ -38,17 +40,17 @@ const ChatItem = ({ chat, userInfo }) => {
 				<img
 					src={iconUrl}
 					alt="chat icon"
-					className="rounded-full aspect-square w-12 object-cover"
+					className="object-cover w-12 rounded-full aspect-square"
 				/>
 			) : (
-				<div className="rounded-full aspect-square w-12 bg-violet-600 flex items-center justify-center">
+				<div className="flex items-center justify-center w-12 rounded-full aspect-square bg-violet-600">
 					<p className="text-xl font-bold">?</p>
 				</div>
 			)}
 			<div className="flex-1">
-				<div className="w-full flex justify-between">
+				<div className="flex justify-between w-full">
 					<p>{title}</p>
-					<div className="flex gap-2 items-center">
+					<div className="flex items-center gap-2">
 						<p> {dayjs(chat.lastMessage?.createdAt).format('DD/MM/YYYY H:mm')}</p>
 
 						{/* <Popup
@@ -65,7 +67,7 @@ const ChatItem = ({ chat, userInfo }) => {
 				</div>
 				<div className="flex items-center gap-1">
 					{chat.lastMessage?.senderProfile.id === userInfo.id
-						? 'Ви: '
+						? t('chats.item.current_user_is_last_sender')+': '
 						: chat.type === 0
 						? ''
 						: `${chat.lastMessage?.senderProfile.givenName}: `}
@@ -75,12 +77,12 @@ const ChatItem = ({ chat, userInfo }) => {
 								<img
 									src={chat.lastMessage.messageMediaUrls?.[0]}
 									alt=""
-									className="w-4 h-4 object-cover"
+									className="object-cover w-4 h-4"
 								/>
-								<span>Фото</span>
+								<span>{t('chats.item.type.picture')}</span>
 							</span>
 						) : (
-							'*повідомлення*'
+							t('chats.item.message')
 						))}
 				</div>
 			</div>

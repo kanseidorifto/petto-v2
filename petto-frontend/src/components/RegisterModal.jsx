@@ -5,9 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../redux/auth/authActions';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const RegisterModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
-	const { loading, userInfo, error, success } = useSelector((state) => state.auth);
+	const { t } = useTranslation();
+	const { loading, userInfo, success } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -37,7 +39,7 @@ const RegisterModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 	const onSubmit = async (values) => {
 		console.log(values);
 		if (values.password !== values.repeatPassword) {
-			alert('Password mismatch');
+			alert(t('auth.register.passwordMismatchAlert'));
 			return;
 		}
 		values.email = values.email.toLowerCase();
@@ -63,48 +65,48 @@ const RegisterModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 				onSubmit={handleSubmit(onSubmit)}
 				className="flex bg-white flex-col p-6 space-y-4 border rounded-md border-amber-500 &[ReactModal__Overlay--after-open:translate-y-0]">
 				<div className="flex justify-between">
-					<p className="text-2xl align-middle text-amber-500">Реєстрація</p>
+					<p className="text-2xl align-middle text-amber-500">{t('auth.register.title')}</p>
 					<button type="button" onClick={closeModal}>
 						<XMarkIcon className="w-6 h-6 text-black" />
 					</button>
 				</div>
 				<div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
 					<input
-						{...register('givenName', { required: "Вкажіть ім'я" })}
+						{...register('givenName', { required: t('auth.register.givenName_placeholder') })}
 						type="text"
-						placeholder="Ім'я"
+						placeholder={t('auth.register.givenName')}
 						className="p-4 border rounded-md border-amber-500 focus:outline-none focus:ring-amber-800 focus:border-amber-800"
 					/>
 					<input
-						{...register('surname', { required: 'Вкажіть прізвище' })}
+						{...register('surname', { required: t('auth.register.surname_placeholder') })}
 						type="text"
-						placeholder="Прізвище"
+						placeholder={t('auth.register.surname')}
 						className="p-4 border rounded-md border-amber-500 focus:outline-none focus:ring-amber-800 focus:border-amber-800"
 					/>
 				</div>
 				<input
-					{...register('email', { required: 'Вкажіть електронну пошту' })}
+					{...register('email', { required: t('auth.register.email_placeholder') })}
 					type="email"
-					placeholder="Електронна пошта"
+					placeholder={t('auth.register.email')}
 					className="p-4 border rounded-md border-amber-500 focus:outline-none focus:ring-amber-800 focus:border-amber-800"
 				/>
 				<input
-					{...register('password', { required: 'Вкажіть пароль' })}
+					{...register('password', { required: t('auth.register.password_placeholder') })}
 					type="password"
-					placeholder="Пароль"
+					placeholder={t('auth.register.password')}
 					className="p-4 border rounded-md border-amber-500 focus:outline-none focus:ring-amber-800 focus:border-amber-800"
 				/>
 				<input
-					{...register('repeatPassword', { required: 'Вкажіть повторно пароль' })}
+					{...register('repeatPassword', { required: t('auth.register.password_repeat_placeholder') })}
 					type="password"
-					placeholder="Повторіть пароль"
+					placeholder={t('auth.register.password_repeat')}
 					className="p-4 border rounded-md border-amber-500 focus:outline-none focus:ring-amber-800 focus:border-amber-800"
 				/>
 				<button
 					type="submit"
 					disabled={loading}
 					className="p-4 text-white border rounded-md border-amber-500 bg-amber-400">
-					{loading ? 'Зачекайте...' : 'Зареєструватись'}
+					{loading ? t('auth.register.loading') : t('auth.register.signup')}
 				</button>
 			</form>
 			{/* </div> */}

@@ -9,7 +9,7 @@ export const AddParticipantPopup = ({ userList, onClickAdd }) => {
 					}}
 					className="text-sm leading-none">
 					<div className="flex p-1 items-center space-x-1.5">
-						<img src={user.avatarUrl} alt="Pet Avatar" className="w-8 h-8 bg-white rounded-full" />
+						<img src={user.avatarUrl} alt="avatar" className="w-8 h-8 bg-white rounded-full" />
 						<span className="truncate">
 							{user.givenName} {user.surname}
 						</span>

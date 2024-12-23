@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 import { useGetChatListQuery } from '../services/chatService';
@@ -9,17 +10,18 @@ import CreateChatModal from '../components/Chat/CreateChatModal';
 import useModal from '../hooks/useModal';
 
 const Chats = () => {
+	const { t } = useTranslation();
 	const { userInfo } = useSelector((state) => state.auth);
 	const [searchText, setSearchText] = useState('');
 
 	const chatList = useGetChatListQuery({ search: searchText });
 	useEffect(() => {
-		document.title = 'Petto - Чати';
+		document.title = 'Petto - ' + t('chats.head.title');
 		window.scrollTo(0, 0);
 		return () => {
 			document.title = 'Petto';
 		};
-	}, []);
+	}, [t]);
 
 	const debounceSearch = useDebounce((search) => {
 		setSearchText(search);
@@ -38,13 +40,13 @@ const Chats = () => {
 					className="flex-1 p-1 text-base bg-transparent rounded appearance-none resize-none placeholder:text-white placeholder:font-light focus:bg-violet-300/50 focus:outline-none focus:border-none focus:ring-none"
 					// value={searchText}
 					onChange={(e) => debounceSearch(e.target.value)}
-					placeholder="Пошук..."
+					placeholder={t('friends.search.placeholder')}
 				/>
 				<button
 					onClick={() => open()}
 					className="rounded-full leading-none font-semibold text-xs py-1.5 px-2.5 bg-amber-500">
-					Створити чат
-				</button>
+					{t('chats.create_chat')}
+					</button>
 			</div>
 			<div className="px-4 py-2 space-y-2 text-white">
 				{!chatList.isFetching ? (
@@ -54,11 +56,11 @@ const Chats = () => {
 								<ChatItem key={index} chat={chat} userInfo={userInfo} />
 							))
 						) : (
-							<p className="px-6 py-4 text-lg font-medium text-center">Нічого не знайдено. 😔</p>
+							<p className="px-6 py-4 text-lg font-medium text-center">{t('chats.empty_list')}</p>
 						)}
 					</div>
 				) : (
-					<p className="px-6 py-4 text-lg font-medium text-center">Завантаження... 🏃‍♂️</p>
+					<p className="px-6 py-4 text-lg font-medium text-center">{t('search.loading_list')}</p>
 				)}
 			</div>
 			<CreateChatModal modalKey="createChatModal" />

@@ -16,10 +16,12 @@ import { useGetFriendListQuery } from '../../services/authService';
 import Popup from 'reactjs-popup';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 Modal.setAppElement('#root');
 
 const EditChatModal = ({ modalKey }) => {
+	const { t } = useTranslation();
 	const navigate = useNavigate();
 	const { isModalOpen, modalData, close } = useModal(modalKey);
 	const {
@@ -116,7 +118,7 @@ const EditChatModal = ({ modalKey }) => {
 		values.title && formData.append('title', values.title);
 
 		if (selectedUserList.length === 0) {
-			toast.error('Додайте учасників до чату');
+			toast.error(t('notifications.createGroupChat.empty_members_list'));
 			return;
 		}
 
@@ -129,9 +131,9 @@ const EditChatModal = ({ modalKey }) => {
 			formData.append('participants', user.id);
 		});
 		toast.promise(updateGroupChat({ chatId: modalData?.id, chat: formData }).unwrap(), {
-			pending: `Оновлення чату ${values.title || ''} 💬`,
-			success: `${values.title || 'Чат'} успішно оновлений 👌`,
-			error: `Помилка оновлення ${values.title || 'чату'}  🤯`,
+			pending: t('notifications.updateGroupChat.pending', { title: values.title || '' }),
+			success: t('notifications.updateGroupChat.success', { title: values.title || '' }),
+			error: t('notifications.updateGroupChat.error', { title: values.title || '' }),
 		});
 		closeCurrentModal();
 	};
@@ -140,12 +142,12 @@ const EditChatModal = ({ modalKey }) => {
 	const [removeChat] = useRemoveChatMutation();
 
 	const handleDelete = () => {
-		if (!window.confirm(`Ви впевнені, що хочете видалити чат ${modalData.title ?? ''}?`)) return;
+		if (!window.confirm(t('chats.deleteChatConfirm'))) return;
 		toast
 			.promise(removeChat(modalData.id).unwrap(), {
-				pending: `Видалення чату ${modalData.title || ''} 💬`,
-				success: `${modalData.title || 'Чат'} успішно видалений 👌`,
-				error: `Помилка видалення ${modalData.title || ''}  🤯`,
+				pending: t('notifications.removeChat.pending'),
+				success: t('notifications.removeChat.success'),
+				error: t('notifications.removeChat.error'),
 			})
 			.then(() => {
 				navigate('/chats');
@@ -166,7 +168,7 @@ const EditChatModal = ({ modalKey }) => {
 				onSubmit={handleSubmit(onSubmit)}
 				className="flex bg-white flex-col p-6 space-y-4 border rounded-md border-amber-500 z-20 &[ReactModal__Overlay--after-open:translate-y-0]">
 				<div className="flex items-center justify-between">
-					<p className="text-xl text-amber-500">Редагувати чат</p>
+					<p className="text-xl text-amber-500">{t('chats.updateChatModal.title')}</p>
 					<button type="button" onClick={closeCurrentModal}>
 						<XMarkIcon className="w-6 h-6 text-black" />
 					</button>
@@ -193,7 +195,7 @@ const EditChatModal = ({ modalKey }) => {
 								ref={cropperRef}
 							/>
 							<button type="button" onClick={() => fileRef.current?.click()}>
-								Змінити
+								{t('chats.createChatModal.photo.edit')}
 							</button>
 						</div>
 					) : (
@@ -209,15 +211,17 @@ const EditChatModal = ({ modalKey }) => {
 								type="button"
 								onClick={() => fileRef.current?.click()}
 								className="absolute top-0 left-0 w-48 h-48 transition-all bg-cover border rounded-md shadow-inner brightness-90 border-violet-500 bg-violet-300/30 hover:bg-violet-300/70">
-								<span className="font-semibold text-violet-700">Змінити</span>
+								<span className="font-semibold text-violet-700">
+									{t('chats.createChatModal.photo.edit')}
+								</span>
 							</button>
 						</div>
 					)}
-					<p>Фото</p>
+					<p>{t('chats.createChatModal.photo.avatar')}</p>
 				</div>
 				<div className="space-y-2">
 					<div className="flex items-center w-full space-x-4">
-						<span>Назва</span>
+						<span>{t('chats.createChatModal.chat_title')}</span>
 						<input
 							type="text"
 							defaultValue={modalData?.title}
@@ -236,7 +240,7 @@ const EditChatModal = ({ modalKey }) => {
 				</div>
 				<div className="p-2 border rounded-md border-violet-500 space-y-2.5">
 					<div className="flex items-center justify-between space-x-2">
-						<span className="text-neutral-600">Додайте учасників</span>
+						<span className="text-neutral-600">{t('chats.createChatModal.add_participants')}</span>
 
 						{!friendshipList.isFetching &&
 							!friendshipList.isError &&
@@ -246,7 +250,7 @@ const EditChatModal = ({ modalKey }) => {
 										<button
 											type="button"
 											className="px-3 py-1 leading-none text-white rounded-full bg-violet-600">
-											Додати
+											{t('chats.createChatModal.participants.add')}
 										</button>
 									}
 									closeOnDocumentClick
@@ -295,13 +299,13 @@ const EditChatModal = ({ modalKey }) => {
 					<button
 						type="submit"
 						className="p-2.5 text-white font-semibold leading-none border rounded-xl border-violet-700 bg-violet-600">
-						Оновити
+						{t('chats.updateChatModal.submit')}
 					</button>
 					<button
 						type="button"
 						onClick={handleDelete}
 						className="p-2.5 text-white font-semibold leading-none border rounded-xl border-red-700 bg-red-600">
-						Видалити
+						{t('chats.updateChatModal.delete')}
 					</button>
 				</div>
 			</form>

@@ -6,8 +6,10 @@ import PetPopup from './PetPopup';
 import { useGetUserPetListQuery, useRemovePetMutation } from '../../services/petService';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 const PetCard = ({ id, profileId, openUpdateModal }) => {
+	const { t } = useTranslation();
 	const { userInfo } = useSelector((state) => state.auth);
 	const { pet } = useGetUserPetListQuery(profileId, {
 		selectFromResult: ({ data }) => ({
@@ -17,11 +19,11 @@ const PetCard = ({ id, profileId, openUpdateModal }) => {
 	const own = profileId === userInfo.id;
 	const [removePet] = useRemovePetMutation();
 	const handleRemovePet = () => {
-		if (confirm('Видалити улюбленця?')) {
+		if (confirm(t('pets.removePetConfirm'))) {
 			toast.promise(removePet(id).unwrap(), {
-				pending: `Видалення улюбленця ${pet.givenName} 😿`,
-				success: `${pet.givenName} успішно видалений 👌`,
-				error: `Помилка видалення ${pet.givenName}  🤯`,
+				pending: t('notifications.removePet.pending', { name: pet.givenName }),
+				success: t('notifications.removePet.success', { name: pet.givenName }),
+				error: t('notifications.removePet.error', { name: pet.givenName }),
 			});
 		}
 	};
@@ -33,7 +35,7 @@ const PetCard = ({ id, profileId, openUpdateModal }) => {
 		<div className="transition-transform rounded-md w-44 bg-violet-300 hover:-translate-y-1">
 			<div className="relative w-44 h-44">
 				<Link to={`/pets/${pet.id}`}>
-					<img src={avatarUrl} alt="Pet Avatar" className="rounded-t-md" />
+					<img src={avatarUrl} alt="petAvatar" className="rounded-t-md" />
 				</Link>
 				<Popup
 					trigger={

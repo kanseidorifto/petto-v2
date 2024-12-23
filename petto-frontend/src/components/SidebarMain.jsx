@@ -8,46 +8,47 @@ import {
 	SparklesIcon,
 } from '@heroicons/react/24/outline';
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
-const options = [
+const options = (t) => [
 	{
 		icon: <UserCircleIcon className="w-6 h-6" />,
-		label: 'Мій профіль',
+		label: t('sidenavbar.profile'),
 		href: '/profile',
 	},
 	{
 		icon: <RectangleStackIcon className="w-6 h-6" />,
-		label: 'Стрічка новин',
+		label: t('sidenavbar.feed'),
 		href: '/feed',
 	},
 	{
 		icon: <MagnifyingGlassIcon className="w-6 h-6" />,
-		label: 'Пошук',
+		label: t('sidenavbar.search'),
 		href: '/search',
 	},
 	{
 		icon: <ChatBubbleLeftIcon className="w-6 h-6" />,
-		label: 'Повідомлення',
+		label: t('sidenavbar.messages'),
 		href: '/chats',
 	},
 	{
 		icon: <UserGroupIcon className="w-6 h-6" />,
-		label: 'Друзі',
+		label: t('sidenavbar.friends'),
 		href: '/friends',
 	},
 	{
 		icon: <SparklesIcon className="w-6 h-6" />,
-		label: 'Улюбленці',
+		label: t('sidenavbar.pets'),
 		href: '/pets',
 	},
 	{
 		icon: <Cog8ToothIcon className="w-6 h-6" />,
-		label: 'Налаштування',
+		label: t('sidenavbar.preferences'),
 		href: '/settings',
 	},
 ];
 
-const Option = ({ icon, label, href, onClick }) => {
+const Option = ({ icon, label, href }) => {
 	return (
 		<NavLink
 			to={href}
@@ -64,11 +65,12 @@ const Option = ({ icon, label, href, onClick }) => {
 };
 
 const SidebarMain = ({ onClick }) => {
+	const { t } = useTranslation();
 	return (
 		<aside className="inline-block w-64 text-white rounded-md bg-violet-400">
 			<nav>
 				<ul className="p-3 space-y-3 text-base leading-none">
-					{options.map((option, index) => (
+					{options(t).map((option, index) => (
 						<li key={index} onClick={() => (onClick ? onClick(option) : {})}>
 							<Option {...option} />
 						</li>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import ProfileHeader from '../components/Profile/ProfileHeader';
 import ProfilePetCard from '../components/Profile/ProfilePetCard';
@@ -9,6 +10,8 @@ import { useGetUserDetailsQuery } from '../services/authService';
 import PostList from '../components/Post/PostList';
 
 const Profile = () => {
+	const { t } = useTranslation();
+
 	const { id } = useParams();
 	const [showModal, setShowModal] = useState({ show: false });
 	const { userInfo } = useSelector((state) => state.auth);
@@ -19,7 +22,7 @@ const Profile = () => {
 	const profileInfo = useGetUserDetailsQuery(profileId);
 	useEffect(() => {
 		document.title =
-			'Petto - Профіль ' +
+			`Petto - ${t('profile.head_title')} ` +
 			(!own && profileInfo.isSuccess
 				? profileInfo.data.givenName + ' ' + profileInfo.data.surname
 				: '');
@@ -27,7 +30,7 @@ const Profile = () => {
 		return () => {
 			document.title = 'Petto';
 		};
-	}, [profileInfo, own]);
+	}, [profileInfo, own, t]);
 
 	if (profileInfo.isFetching) {
 		return <div>Loading...</div>;
@@ -50,12 +53,12 @@ const Profile = () => {
 			<div className="flex gap-4 max-lg:flex-col-reverse ">
 				<main className="flex-1">
 					<div className="flex items-center justify-between px-6 py-3.5 text-white bg-violet-500 rounded-t-md">
-						<h2 className="text-base font-medium">Дописи</h2>
+						<h2 className="text-base font-medium">{t('profile.main.posts')}</h2>
 						{own && (
 							<button
 								onClick={openModal}
 								className="rounded-full leading-none font-semibold text-base py-1.5 px-2.5 bg-amber-500">
-								Новий допис
+								{t('profile.main.new_post')}
 							</button>
 						)}
 					</div>
@@ -66,7 +69,7 @@ const Profile = () => {
 				<div>
 					<aside className="rounded-md bg-violet-400">
 						<div className="flex items-center justify-between px-6 py-4 text-white bg-violet-500 rounded-t-md">
-							<h2 className="text-base font-medium">Улюбленці користувача</h2>
+							<h2 className="text-base font-medium">{t('profile.pets_widget.title')}</h2>
 						</div>
 						<div className="p-4 space-y-4">
 							{profileInfo.data.pets?.length > 0 ? (
@@ -77,14 +80,14 @@ const Profile = () => {
 								</div>
 							) : (
 								<p className="inline-block w-full p-1.5 text-center text-white text-md">
-									Жодного улюбленця 😿
+									{t('profile.pets_widget.empty_pet_list')}{' '}
 								</p>
 							)}
 							<div className="text-center">
 								<Link
 									to={`/pets?userId=${profileId}`}
 									className="w-64 bg-violet-600 text-white text-sm leading-none p-2.5 rounded-xl">
-									Переглянути більше
+									{t('profile.pets_widget.view_more')}{' '}
 								</Link>
 							</div>
 						</div>

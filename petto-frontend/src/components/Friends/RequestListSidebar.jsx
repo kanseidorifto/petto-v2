@@ -1,12 +1,13 @@
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
-const options = [
+const options = (t) => [
 	{
-		label: 'Мої друзі',
+		label: t('friends.options.friends'),
 		href: '/friends',
 	},
 	{
-		label: 'Запити',
+		label: t('friends.options.requests'),
 		href: '/friends/requests',
 	},
 ];
@@ -28,11 +29,12 @@ const Option = ({ label, href }) => {
 };
 
 const RequestListSidebar = () => {
+	const { t } = useTranslation();
 	return (
-		<aside className="inline-block w-full md:w-64 text-white rounded-md bg-violet-400">
+		<aside className="inline-block w-full text-white rounded-md md:w-64 bg-violet-400">
 			<nav>
 				<ul className="p-3 space-y-3 text-base leading-none">
-					{options.map((option, index) => (
+					{options(t).map((option, index) => (
 						<li key={index}>
 							<Option {...option} />
 						</li>

@@ -1,4 +1,5 @@
 import Modal from 'react-modal';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useState, useRef } from 'react';
@@ -9,6 +10,7 @@ import { file2Base64 } from '../../utils/file2Base64';
 Modal.setAppElement('#root');
 
 const ChangePhotoModal = ({ modalIsOpen, afterOpenModal, closeModal, label, aspectRatio }) => {
+	const { t } = useTranslation();
 	// ref of the file input
 	const fileRef = useRef();
 
@@ -88,8 +90,7 @@ const ChangePhotoModal = ({ modalIsOpen, afterOpenModal, closeModal, label, aspe
 								ref={cropperRef}
 							/>
 							<button type="button" onClick={() => fileRef.current?.click()}>
-								Змінити
-							</button>
+								{t('preferences.profiile.edit')}	</button>
 						</div>
 					) : (
 						<>
@@ -97,7 +98,7 @@ const ChangePhotoModal = ({ modalIsOpen, afterOpenModal, closeModal, label, aspe
 								type="button"
 								onClick={() => fileRef.current?.click()}
 								className="w-48 h-48 transition-all bg-cover border rounded-md brightness-90 border-violet-500 bg-violet-300 hover:bg-violet-300/50">
-								<span className="text-violet-700">Додати</span>
+								<span className="text-violet-700">{t('preferences.profiile.changePictureModal.add')}</span>
 							</button>
 						</>
 					)}
@@ -105,8 +106,7 @@ const ChangePhotoModal = ({ modalIsOpen, afterOpenModal, closeModal, label, aspe
 				<button
 					type="submit"
 					className="p-2.5 text-white font-semibold leading-none border rounded-xl border-violet-700 bg-violet-600">
-					Підтвердити
-				</button>
+					{t('preferences.profiile.changePictureModal.submit')}	</button>
 			</form>
 		</Modal>
 	);

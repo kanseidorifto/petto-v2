@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Gallery } from 'react-grid-gallery';
@@ -11,7 +12,8 @@ import { useCreateUserPostMutation } from '../../services/postService';
 import { toast } from 'react-toastify';
 Modal.setAppElement('#root');
 
-const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
+const CreatePostModal = ({ modalIsOpen, closeModal }) => {
+	const { t } = useTranslation();
 	const {
 		register,
 		handleSubmit,
@@ -27,7 +29,7 @@ const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 		// shouldUseNativeValidation: true,
 	});
 	const { data: petList, isFetching, isError } = useGetMyPetListQuery();
-	const [createPost, newPost] = useCreateUserPostMutation();
+	const [createPost] = useCreateUserPostMutation();
 	const [availablePetList, setAvailablePetList] = useState();
 	useEffect(() => {
 		setAvailablePetList(petList?.items);
@@ -65,9 +67,9 @@ const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 		// formData.append('taggedPetsIds', JSON.stringify(taggedPetList));
 		taggedPetList.forEach((pet) => formData.append('taggedPetsIds', pet));
 		toast.promise(createPost(formData).unwrap(), {
-			pending: 'Створення допису 📄',
-			success: 'Допис успішно створений 👌',
-			error: 'Помилка створення допису 🤯',
+			pending: t('notifications.createPost.pending'),
+			success: t('notifications.createPost.success'),
+			error: t('notifications.createPost.error'),
 		});
 		closeOrderModal();
 	};
@@ -86,7 +88,7 @@ const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 				onSubmit={handleSubmit(onSubmit)}
 				className="flex bg-white flex-col p-6 max-xl:max-w-screen-md space-y-4 border rounded-md border-amber-500 &[ReactModal__Overlay--after-open:translate-y-0]">
 				<div className="flex justify-between">
-					<p className="text-2xl align-middle text-amber-500">Створити допис</p>
+					<p className="text-2xl align-middle text-amber-500">{t('post.createPostModal.title')}</p>
 					<button type="button" onClick={closeOrderModal}>
 						<XMarkIcon className="w-6 h-6 text-black" />
 					</button>
@@ -105,7 +107,7 @@ const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 						type="button"
 						onClick={() => addPicturesRef.current.click()}
 						className="py-24 transition-all border rounded-md border-violet-500 bg-violet-300 hover:bg-violet-300/50">
-						<span className="text-violet-700">Додати світлини</span>
+						<span className="text-violet-700">{t('post.createPostModal.add_pictures')}</span>
 					</button>
 				) : (
 					<div className="flex justify-between">
@@ -113,13 +115,13 @@ const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 							type="button"
 							className="px-3 py-1 leading-none text-white rounded-full bg-violet-600"
 							onClick={() => addPicturesRef.current.click()}>
-							Додати світлину
+							{t('post.createPostModal.add_picture')}{' '}
 						</button>
 						<button
 							type="button"
 							className="px-3 py-1 leading-none text-white bg-red-600 rounded-full"
 							onClick={() => resetMedia()}>
-							Очистити
+							{t('post.createPostModal.clear_pictures')}{' '}
 						</button>
 					</div>
 				)}
@@ -127,11 +129,11 @@ const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 				<TextareaAutosize
 					{...register('writtenText')}
 					className="flex-1 p-2 text-base bg-transparent border rounded appearance-none resize-none border-violet-500 text-neutral-900 placeholder:text-neutral-600 placeholder:font-light focus:bg-violet-200/50 focus:outline-none focus:border-violet-700 focus:ring-none"
-					placeholder="Що у вас нового?"
+					placeholder={t('post.createPostModal.text_placeholder')}
 				/>
 				<div className="p-2 border rounded-md border-violet-500 space-y-2.5">
 					<div className="flex items-center justify-between space-x-2">
-						<span className="text-neutral-600">Позначте своїх улюбленців</span>
+						<span className="text-neutral-600">{t('post.createPostModal.tag_pets')}</span>
 
 						{!isFetching && !isError && availablePetList?.length > 0 && (
 							<Popup
@@ -140,7 +142,7 @@ const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 										onClick={() => setOpenPetPopup(true)}
 										type="button"
 										className="px-3 py-1 leading-none text-white rounded-full bg-violet-600">
-										Додати
+										{t('post.createPostModal.tag_pet')}{' '}
 									</button>
 								}
 								closeOnDocumentClick
@@ -188,7 +190,7 @@ const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 				<button
 					type="submit"
 					className="p-2.5 text-white leading-none border rounded-xl border-amber-600 bg-amber-500">
-					Опублікувати
+					{t('post.createPostModal.publish')}{' '}
 				</button>
 			</form>
 			{/* </div> */}
